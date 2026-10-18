@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import qesm.project.analysis.attack_graph.exception.OverallProbabilitiesOverOneException;
+import qesm.project.analysis.attack_graph.exception.OverallProbabilitiesUnderOneException;
 
 import java.util.Set;
 import java.util.Collections;
@@ -15,7 +16,7 @@ public class Step {
 	
 	private double successProbability;
 	private double failureProbability;
-	private double failureDetectionProbability;
+	private double failureDetectedProbability;
 	
 	private double duration;
 	private double detectionTime;
@@ -24,22 +25,28 @@ public class Step {
 	private Set<Outcome> produces;
 	
 	public Step(UUID uuid, String name, Set<Requirement> requires, Set<Outcome> produces) {
+		this(uuid, name, 0.0, 1.0, 0.0, requires, produces);
+	}
+	
+	public Step(UUID uuid, String name, double successProbability, double failureProbability, double failureDetectedProbability, Set<Requirement> requires, Set<Outcome> produces) {
 		setUuid(uuid);
 		setName(name);
-		setSuccessProbability(0.0);
-		setFailureProbability(1.0);
-		setFailureDetectionProbability(0.0);
+		this.successProbability = successProbability;
+		this.failureProbability = failureProbability;
+		this.failureDetectedProbability = failureDetectedProbability;
 		setDuration(0.0);
 		setDetectionTime(0.0);
 		setRequires(requires);
 		setProduces(produces);
+		
+		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
 	}
 
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
 	public double getSuccessProbability() { return successProbability; }
 	public double getFailureProbability() { return failureProbability; }
-	public double getFailureDetectionProbability() { return failureDetectionProbability; }
+	public double getFailureDetectedProbability() { return failureDetectedProbability; }
 	public double getDuration() { return duration; }
 	public double getDetectionTime() { return detectionTime; }
 	public Set<Outcome> getProduces() { return Collections.unmodifiableSet(produces); }
@@ -48,16 +55,16 @@ public class Step {
 	private void setUuid(UUID uuid) { this.uuid = uuid; }
 	private void setName(String name) { this.name = name; }
 	public void setSuccessProbability(double successProbability) {
-		validateProbabilities(successProbability, failureProbability, failureDetectionProbability);
+		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
 		this.successProbability = successProbability;
 	}
 	public void setFailureProbability(double failureProbability) {
+		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
 		this.failureProbability = failureProbability;
-		validateProbabilities(successProbability, failureProbability, failureDetectionProbability);
 	}
-	public void setFailureDetectionProbability(double failureDetectionProbability) {
-		validateProbabilities(successProbability, failureProbability, failureDetectionProbability);
-		this.failureDetectionProbability = failureDetectionProbability;
+	public void setFailureDetectedProbability(double failureDetectedProbability) {
+		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
+		this.failureDetectedProbability = failureDetectedProbability;
 	}
 	public void setDuration(double duration) { this.duration = duration; }
 	public void setDetectionTime(double detectionTime) { this.detectionTime = detectionTime; }
@@ -67,6 +74,7 @@ public class Step {
 	private static void validateProbabilities(double p1, double p2, double p3) throws OverallProbabilitiesOverOneException {
 		double sum = p1 + p2 + p3;
 		if (sum > 1.0) throw new OverallProbabilitiesOverOneException(sum);
+		if (sum < 1.0) throw new OverallProbabilitiesUnderOneException(sum);
 	}
 	
 	public void addRequirement(Requirement r) { if (!requires.contains(r)) requires.add(r); }
@@ -74,7 +82,7 @@ public class Step {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(detectionTime, duration, failureDetectionProbability, failureProbability, name,
+		return Objects.hash(detectionTime, duration, failureDetectedProbability, failureProbability, name,
 				successProbability, uuid);
 	}
 
@@ -89,7 +97,7 @@ public class Step {
 		Step other = (Step) obj;
 		return Double.doubleToLongBits(detectionTime) == Double.doubleToLongBits(other.detectionTime)
 				&& Double.doubleToLongBits(duration) == Double.doubleToLongBits(other.duration)
-				&& Double.doubleToLongBits(failureDetectionProbability) == Double.doubleToLongBits(other.failureDetectionProbability)
+				&& Double.doubleToLongBits(failureDetectedProbability) == Double.doubleToLongBits(other.failureDetectedProbability)
 				&& Double.doubleToLongBits(failureProbability) == Double.doubleToLongBits(other.failureProbability)
 				&& Objects.equals(name, other.name)
 				&& Double.doubleToLongBits(successProbability) == Double.doubleToLongBits(other.successProbability)
@@ -101,8 +109,8 @@ public class Step {
 	@Override
 	public String toString() {
 		return "Step [uuid=" + uuid + ", name=" + name + ", successProbability=" + successProbability
-				+ ", failureProbability=" + failureProbability + ", failureDetectionProbability="
-				+ failureDetectionProbability + ", duration=" + duration + ", detectionTime=" + detectionTime
+				+ ", failureProbability=" + failureProbability + ", failureDetectedProbability="
+				+ failureDetectedProbability + ", duration=" + duration + ", detectionTime=" + detectionTime
 				+ ", requires=" + requires + ", produces=" + produces + "]";
 	}
 }
