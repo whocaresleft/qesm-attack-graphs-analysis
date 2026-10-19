@@ -12,6 +12,8 @@ public class StepNotValidException extends RuntimeException {
 		this.s = s;
 	}
 	
+	public Step getStep() { return s; }
+	
 	@Override
 	public String getMessage() {
 		return String.format("%s is not a valid step", s.toString());

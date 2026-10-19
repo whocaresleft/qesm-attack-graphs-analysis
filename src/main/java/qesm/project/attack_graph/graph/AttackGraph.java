@@ -1,9 +1,11 @@
 package qesm.project.attack_graph.graph;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.Set;
-import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import qesm.project.attack_graph.exception.StepNotValidException;
 import qesm.project.attack_graph.step.Step;
@@ -14,42 +16,50 @@ public class AttackGraph {
 	private UUID uuid;
 	private String name;
 	
-	private Set<Step> steps;
-	private Set<Vertex> components;
+	private Map<UUID, Step> steps;
+	private Map<UUID, Vertex> vertices;
 	
-	public AttackGraph(UUID uuid, String name, Set<Step> steps, Set<Vertex> components) {
+	public AttackGraph(UUID uuid, String name, Set<Step> steps, Set<Vertex> vertices) {
 		setUuid(uuid);
 		setName(name);
 		setSteps(steps);
-		setComponents(components);
+		setVertices(vertices);
 	}
 	
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
-	public Set<Step> getSteps() { return Collections.unmodifiableSet(steps); }
-	public Set<Vertex> getComponents() { return Collections.unmodifiableSet(components); }
+	public Set<Step> getSteps() { return steps.values().stream().collect(Collectors.toSet()); }
+	public Set<Vertex> getVertices() { return vertices.values().stream().collect(Collectors.toSet()); }
 	
 	private void setUuid(UUID uuid) { this.uuid = uuid; }
 	private void setName(String name) { this.name = name; }
-	public void setSteps(Set<Step> steps) { this.steps = steps; }
-	public void setComponents(Set<Vertex> components) { this.components = components; }
+	public void setSteps(Set<Step> steps) { this.steps = steps.stream().collect(Collectors.toMap(Step::getUuid, step -> step)); }
+	public void setVertices(Set<Vertex> vertices) { this.vertices = vertices.stream().collect(Collectors.toMap(Vertex::getUuid, vertex -> vertex)); }
 	
-	public void addComponent(Vertex vertex) { components.add(vertex); }
-	public void addStep(Step step) { steps.add(step); }
+	public void addVertex(Vertex vertex) { vertices.put(vertex.getUuid(), vertex); }
+	public void addStep(Step step) { steps.put(step.getUuid(), step); }
+	
+	public Optional<Vertex> getVertexByUuid(UUID uuid) {
+		return Optional.ofNullable(vertices.get(uuid));
+	}
+	
+	public Optional<Step> getStepByUuid(UUID uuid) {
+		return Optional.ofNullable(steps.get(uuid));
+	}
 	
 	public void validate() throws StepNotValidException {
-		for (Step step : steps) {
+		for (Step step : steps.values()) {
 			if (!step
 				.getProduces()
 				.stream()
-				.filter(outcome -> !components.contains((Vertex)outcome))
+				.filter(outcome -> !vertices.containsValue((Vertex)outcome))
 				.toList()
 				.isEmpty()
 			) { throw new StepNotValidException(step); }
 			if (!step
 				.getRequires()
 				.stream()
-				.filter(requirement -> !components.contains((Vertex)requirement))
+				.filter(requirement -> !vertices.containsValue((Vertex)requirement))
 				.toList()
 				.isEmpty()
 			) { throw new StepNotValidException(step); }
@@ -58,7 +68,7 @@ public class AttackGraph {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(components, name, steps, uuid);
+		return Objects.hash(vertices, name, steps, uuid);
 	}
 
 	@Override
@@ -70,12 +80,12 @@ public class AttackGraph {
 		if (getClass() != obj.getClass())
 			return false;
 		AttackGraph other = (AttackGraph) obj;
-		return Objects.equals(components, other.components) && Objects.equals(name, other.name)
+		return Objects.equals(vertices, other.vertices) && Objects.equals(name, other.name)
 				&& Objects.equals(steps, other.steps) && Objects.equals(uuid, other.uuid);
 	}
 
 	@Override
 	public String toString() {
-		return "AttackGraph [uuid=" + uuid + ", name=" + name + ", steps=" + steps + ", components=" + components + "]";
+		return "AttackGraph [uuid=" + uuid + ", name=" + name + ", steps=" + steps + ", vertices=" + vertices + "]";
 	}
 }

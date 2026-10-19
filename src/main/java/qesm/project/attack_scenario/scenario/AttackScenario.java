@@ -37,10 +37,16 @@ public class AttackScenario {
 	private void setUuid(UUID uuid) { this.uuid = uuid; }
 	private void setName(String name) { this.name = name; }
 	private void setGoalsRequired(GoalCombination goalsRequired) { this.goalsRequired = goalsRequired; }
-	private void setTimeBound(Duration timeBound) { this.timeBound = timeBound; }
+	private void setTimeBound(Duration timeBound) {
+		if (!timeBound.isPositive()) throw new IllegalArgumentException("Illegal duration, must be positive: " + timeBound);
+		this.timeBound = timeBound;
+	}
 	private void setGraph(AttackGraph graph) { this.graph = graph; }
 	private void setInitialMarking(Set<Vertex> initialMarking) { this.initialMarking = initialMarking; }
-	private void setTargets(Set<Goal> targets) { this.targets = targets; }
+	private void setTargets(Set<Goal> targets) {
+		if (targets.isEmpty()) throw new IllegalArgumentException("Illegal targets, must contain at least 1 target");
+		this.targets = targets;
+		}
 	private void setStrategy(AttackStrategy strategy) { this.strategy = strategy; }
 	
 	public AttackScenario(UUID uuid, String name, AttackGraph graph, Set<Vertex> initialMarking, Set<Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, Duration timeBound) {
