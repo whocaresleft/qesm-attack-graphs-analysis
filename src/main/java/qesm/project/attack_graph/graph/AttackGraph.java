@@ -1,13 +1,13 @@
-package qesm.project.analysis.attack_graph.graph;
+package qesm.project.attack_graph.graph;
 
 import java.util.UUID;
 import java.util.Set;
 import java.util.Collections;
 import java.util.Objects;
 
-import qesm.project.analysis.attack_graph.exception.StepNotValidException;
-import qesm.project.analysis.attack_graph.step.Step;
-import qesm.project.analysis.attack_graph.vertex.Vertex;
+import qesm.project.attack_graph.exception.StepNotValidException;
+import qesm.project.attack_graph.step.Step;
+import qesm.project.attack_graph.vertex.Vertex;
 
 public class AttackGraph {
 	

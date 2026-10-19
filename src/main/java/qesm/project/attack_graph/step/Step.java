@@ -1,10 +1,11 @@
-package qesm.project.analysis.attack_graph.step;
+package qesm.project.attack_graph.step;
 
 import java.util.Objects;
 import java.util.UUID;
 
-import qesm.project.analysis.attack_graph.exception.OverallProbabilitiesOverOneException;
-import qesm.project.analysis.attack_graph.exception.OverallProbabilitiesUnderOneException;
+import qesm.project.attack_graph.exception.OverallProbabilitiesOverOneException;
+import qesm.project.attack_graph.exception.OverallProbabilitiesUnderOneException;
+import qesm.project.utility.Distribution;
 
 import java.util.Set;
 import java.util.Collections;
@@ -18,24 +19,30 @@ public class Step {
 	private double failureProbability;
 	private double failureDetectedProbability;
 	
-	private double duration;
-	private double detectionTime;
+	private Distribution duration;
+	private Distribution detectionTime;
 	
 	private Set<Requirement> requires;
 	private Set<Outcome> produces;
 	
-	public Step(UUID uuid, String name, Set<Requirement> requires, Set<Outcome> produces) {
-		this(uuid, name, 0.0, 1.0, 0.0, requires, produces);
-	}
-	
-	public Step(UUID uuid, String name, double successProbability, double failureProbability, double failureDetectedProbability, Set<Requirement> requires, Set<Outcome> produces) {
+	public Step(
+		UUID uuid,
+		String name,
+		double successProbability,
+		double failureProbability,
+		double failureDetectedProbability,
+		Distribution duration,
+		Distribution detectionTime,
+		Set<Requirement> requires,
+		Set<Outcome> produce
+	) {
 		setUuid(uuid);
 		setName(name);
 		this.successProbability = successProbability;
 		this.failureProbability = failureProbability;
 		this.failureDetectedProbability = failureDetectedProbability;
-		setDuration(0.0);
-		setDetectionTime(0.0);
+		setDuration(duration);
+		setDetectionTime(detectionTime);
 		setRequires(requires);
 		setProduces(produces);
 		
@@ -47,8 +54,8 @@ public class Step {
 	public double getSuccessProbability() { return successProbability; }
 	public double getFailureProbability() { return failureProbability; }
 	public double getFailureDetectedProbability() { return failureDetectedProbability; }
-	public double getDuration() { return duration; }
-	public double getDetectionTime() { return detectionTime; }
+	public Distribution getDuration() { return duration; }
+	public Distribution getDetectionTime() { return detectionTime; }
 	public Set<Outcome> getProduces() { return Collections.unmodifiableSet(produces); }
 	public Set<Requirement> getRequires() { return Collections.unmodifiableSet(requires); }
 	
@@ -66,8 +73,8 @@ public class Step {
 		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
 		this.failureDetectedProbability = failureDetectedProbability;
 	}
-	public void setDuration(double duration) { this.duration = duration; }
-	public void setDetectionTime(double detectionTime) { this.detectionTime = detectionTime; }
+	public void setDuration(Distribution duration) { this.duration = duration; }
+	public void setDetectionTime(Distribution detectionTime) { this.detectionTime = detectionTime; }
 	public void setRequires(Set<Requirement> requires) { this.requires = requires; }
 	public void setProduces(Set<Outcome> produces) { this.produces = produces; }
 	
@@ -95,8 +102,8 @@ public class Step {
 		if (getClass() != obj.getClass())
 			return false;
 		Step other = (Step) obj;
-		return Double.doubleToLongBits(detectionTime) == Double.doubleToLongBits(other.detectionTime)
-				&& Double.doubleToLongBits(duration) == Double.doubleToLongBits(other.duration)
+		return Objects.equals(detectionTime, other.detectionTime)
+				&& Objects.equals(duration, other.duration)
 				&& Double.doubleToLongBits(failureDetectedProbability) == Double.doubleToLongBits(other.failureDetectedProbability)
 				&& Double.doubleToLongBits(failureProbability) == Double.doubleToLongBits(other.failureProbability)
 				&& Objects.equals(name, other.name)

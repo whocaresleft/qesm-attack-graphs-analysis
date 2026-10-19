@@ -1,6 +1,6 @@
-package qesm.project.analysis.attack_graph.exception;
+package qesm.project.attack_graph.exception;
 
-import qesm.project.analysis.attack_graph.step.Step;
+import qesm.project.attack_graph.step.Step;
 
 public class StepNotValidException extends RuntimeException {
 

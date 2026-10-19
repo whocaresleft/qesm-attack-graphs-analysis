@@ -1,26 +1,28 @@
-package qesm.project.analysis.attack_graph.vertex;
+package qesm.project.attack_graph.vertex;
 
 import java.util.Objects;
 import java.util.UUID;
-import qesm.project.analysis.attack_graph.step.Requirement;
-import qesm.project.analysis.attack_graph.step.Outcome;
+
+import qesm.project.attack_graph.step.Outcome;
+import qesm.project.attack_graph.step.Requirement;
+import qesm.project.utility.Distribution;
 
 public class Goal extends Vertex implements Requirement, Outcome {
 
 	private double value;
-	private double detectionTime;
+	private Distribution detectionTime;
 	
-	public Goal(UUID uuid, String name, double value, double detectionTime) {
+	public Goal(UUID uuid, String name, double value, Distribution detectionTime) {
 		super(uuid, name);
 		setValue(value);
 		setDetectionTime(detectionTime);
 	}
 
 	private void setValue(double value) { this.value = value; }
-	private void setDetectionTime(double detectionTime) { this.detectionTime = detectionTime; }
+	private void setDetectionTime(Distribution detectionTime) { this.detectionTime = detectionTime; }
 
 	public double getValue() { return value; }
-	public double getDetectionTime() { return detectionTime; }
+	public Distribution getDetectionTime() { return detectionTime; }
 	
 	@Override
 	public int hashCode() {
@@ -39,7 +41,7 @@ public class Goal extends Vertex implements Requirement, Outcome {
 		if (getClass() != obj.getClass())
 			return false;
 		Goal other = (Goal) obj;
-		return Double.doubleToLongBits(detectionTime) == Double.doubleToLongBits(other.detectionTime)
+		return Objects.equals(detectionTime, other.detectionTime)
 				&& Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
 	}
 

@@ -1,21 +1,24 @@
-package qesm.project.analysis.attack_graph.vertex;
+package qesm.project.attack_graph.vertex;
 
 import java.util.Objects;
 import java.util.UUID;
-import qesm.project.analysis.attack_graph.step.Requirement;
-import qesm.project.analysis.attack_graph.step.Outcome;
+
+import qesm.project.attack_graph.step.Outcome;
+import qesm.project.attack_graph.step.Requirement;
+import qesm.project.utility.Distribution;
 
 public class Access extends Vertex implements Requirement, Outcome {
-	private double detectionTime;
 	
-	public Access(UUID uuid, String name, double detectionTime) {
+	private Distribution detectionTime;
+	
+	public Access(UUID uuid, String name, Distribution detectionTime) {
 		super(uuid, name);
 		setDetectionTime(detectionTime);
 	}
 	
-	public double getDetectionTime() { return detectionTime; }
+	public Distribution getDetectionTime() { return detectionTime; }
 
-	private void setDetectionTime(double detectionTime) { this.detectionTime = detectionTime; }
+	private void setDetectionTime(Distribution detectionTime) { this.detectionTime = detectionTime; }
 
 	@Override
 	public int hashCode() {
@@ -34,7 +37,7 @@ public class Access extends Vertex implements Requirement, Outcome {
 		if (getClass() != obj.getClass())
 			return false;
 		Access other = (Access) obj;
-		return Double.doubleToLongBits(detectionTime) == Double.doubleToLongBits(other.detectionTime);
+		return Objects.equals(detectionTime, other.detectionTime);
 	}
 
 	@Override

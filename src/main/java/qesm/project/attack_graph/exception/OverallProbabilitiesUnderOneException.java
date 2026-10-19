@@ -1,4 +1,4 @@
-package qesm.project.analysis.attack_graph.exception;
+package qesm.project.attack_graph.exception;
 
 public class OverallProbabilitiesUnderOneException extends RuntimeException {
 	

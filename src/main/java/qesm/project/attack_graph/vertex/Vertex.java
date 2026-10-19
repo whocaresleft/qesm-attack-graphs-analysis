@@ -1,4 +1,4 @@
-package qesm.project.analysis.attack_graph.vertex;
+package qesm.project.attack_graph.vertex;
 
 import java.util.Objects;
 import java.util.UUID;

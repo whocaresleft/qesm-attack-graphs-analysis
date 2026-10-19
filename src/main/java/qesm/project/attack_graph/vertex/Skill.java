@@ -1,7 +1,8 @@
-package qesm.project.analysis.attack_graph.vertex;
+package qesm.project.attack_graph.vertex;
 
 import java.util.UUID;
-import qesm.project.analysis.attack_graph.step.Requirement;
+
+import qesm.project.attack_graph.step.Requirement;
 
 public class Skill extends Vertex implements Requirement {
 

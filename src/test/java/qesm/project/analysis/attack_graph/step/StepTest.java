@@ -1,7 +1,5 @@
 package qesm.project.analysis.attack_graph.step;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.UUID;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +9,15 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import qesm.project.analysis.attack_graph.exception.OverallProbabilitiesOverOneException;
-import qesm.project.analysis.attack_graph.exception.OverallProbabilitiesUnderOneException;
-import qesm.project.analysis.attack_graph.vertex.Goal;
-import qesm.project.analysis.attack_graph.vertex.Skill;
+import qesm.project.attack_graph.exception.OverallProbabilitiesOverOneException;
+import qesm.project.attack_graph.exception.OverallProbabilitiesUnderOneException;
+import qesm.project.attack_graph.step.Outcome;
+import qesm.project.attack_graph.step.Requirement;
+import qesm.project.attack_graph.step.Step;
+import qesm.project.attack_graph.vertex.Goal;
+import qesm.project.attack_graph.vertex.Skill;
+import qesm.project.utility.Distribution;
+import qesm.project.utility.Exponential;
 
 class StepTest {
 
@@ -23,116 +26,90 @@ class StepTest {
 	private Requirement skill2;
 	private Outcome goal1;
 	private Outcome goal2;
+
+	private static Distribution d = new Exponential(0.0);
+	
+	private static double ZERO_DOT_ZERO  = 0.0;
+	private static double ZERO_DOT_ONE   = 0.1;
+	private static double ZERO_DOT_TWO   = 0.2;
+	private static double ZERO_DOT_THREE = 0.3;
+	private static double ZERO_DOT_FOUR  = 0.4;
+	private static double ZERO_DOT_FIVE  = 0.5;
+	private static double ONE_DOT_ONE    = 1.1;
+	
+	private static Step createStepFromProbabilities(double success, double failure, double failureDetected) {
+		return new Step(UUID.randomUUID(), "Step", success, failure, failureDetected, d, d, new HashSet<>(), new HashSet<>());
+	}
 	
 	@BeforeEach
 	void setup() {
-		step = new Step(UUID.randomUUID(), "Step", 0.4, 0.4, 0.2, new HashSet<>(), new HashSet<>());
+		step   = new Step(UUID.randomUUID(), "Step", ZERO_DOT_FOUR, ZERO_DOT_FOUR, ZERO_DOT_TWO, d, d, new HashSet<>(), new HashSet<>());
 		skill1 = new Skill(UUID.randomUUID(), "Skill 1");
 		skill2 = new Skill(UUID.randomUUID(), "Skill 2");
-		goal1 = new Goal(UUID.randomUUID(), "Goal 1", 0.0, 0.0);
-		goal2 = new Goal(UUID.randomUUID(), "Goal 2", 0.0, 0.0);
+		goal1  = new Goal(UUID.randomUUID(), "Goal 1", 0.0, d);
+		goal2  = new Goal(UUID.randomUUID(), "Goal 2", 0.0, d);
 	}
 	
 	@Test
 	void testValidateProbabilitiesUnderOneDuringCreation() {
 		assertThatExceptionOfType(OverallProbabilitiesUnderOneException.class)
-			.isThrownBy(() -> new Step(
-				UUID.randomUUID(),
-				"Step",
-				0.1,
-				0.0,
-				0.0,
-				new HashSet<>(),
-				new HashSet<>()
-			))
+			.isThrownBy(() -> createStepFromProbabilities(ZERO_DOT_ONE, ZERO_DOT_ZERO, ZERO_DOT_ZERO))
 			.withMessage("The three probabilities are under 1.000000: 0.100000");
 	}
 	
 	@Test
 	void testValidateProbabilitiesOverOneDuringCreation() {
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> new Step(
-				UUID.randomUUID(),
-				"Step",
-				1.1,
-				0.0,
-				0.0,
-				new HashSet<>(),
-				new HashSet<>()
-			))
+			.isThrownBy(() -> createStepFromProbabilities(ONE_DOT_ONE, ZERO_DOT_ZERO, ZERO_DOT_ZERO))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
 		
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> new Step(
-				UUID.randomUUID(),
-				"Step",
-				0.0,
-				1.1,
-				0.0,
-				new HashSet<>(),
-				new HashSet<>()
-			))
+			.isThrownBy(() -> createStepFromProbabilities(ZERO_DOT_ZERO, ONE_DOT_ONE, ZERO_DOT_ZERO))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
 		
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> new Step(
-				UUID.randomUUID(),
-				"Step",
-				0.0,
-				0.0,
-				1.1,
-				new HashSet<>(),
-				new HashSet<>()
-			))
+			.isThrownBy(() -> createStepFromProbabilities(ZERO_DOT_ZERO, ZERO_DOT_ZERO, ONE_DOT_ONE))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
 		
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> new Step(
-				UUID.randomUUID(),
-				"Step",
-				0.5,
-				0.3,
-				0.3,
-				new HashSet<>(),
-				new HashSet<>()
-			))
+			.isThrownBy(() -> createStepFromProbabilities(ZERO_DOT_FIVE, ZERO_DOT_THREE, ZERO_DOT_THREE))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
 	}
 	
 	@Test
 	void testValidateProbabilitiesOverOneAfterCreation() {
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> step.setSuccessProbability(0.5))
+			.isThrownBy(() -> step.setSuccessProbability(ZERO_DOT_FIVE))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
-		assertThat(step.getSuccessProbability()).isEqualTo(0.4);
+		assertThat(step.getSuccessProbability()).isEqualTo(ZERO_DOT_FOUR);
 		
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> step.setFailureProbability(0.5))
+			.isThrownBy(() -> step.setFailureProbability(ZERO_DOT_FIVE))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
-		assertThat(step.getFailureProbability()).isEqualTo(0.4);
+		assertThat(step.getFailureProbability()).isEqualTo(ZERO_DOT_FOUR);
 		
 		assertThatExceptionOfType(OverallProbabilitiesOverOneException.class)
-			.isThrownBy(() -> step.setFailureDetectedProbability(0.3))
+			.isThrownBy(() -> step.setFailureDetectedProbability(ZERO_DOT_THREE))
 			.withMessage("The three probabilities are over 1.000000: 1.100000");
-		assertThat(step.getFailureDetectedProbability()).isEqualTo(0.2);
+		assertThat(step.getFailureDetectedProbability()).isEqualTo(ZERO_DOT_TWO);
 	}
 	
 	@Test
 	void testValidateProbabilitiesUnderOneAfterCreation() {
 		assertThatExceptionOfType(OverallProbabilitiesUnderOneException.class)
-			.isThrownBy(() -> step.setSuccessProbability(0.3))
+			.isThrownBy(() -> step.setSuccessProbability(ZERO_DOT_THREE))
 			.withMessage("The three probabilities are under 1.000000: 0.900000");
-		assertThat(step.getSuccessProbability()).isEqualTo(0.4);
+		assertThat(step.getSuccessProbability()).isEqualTo(ZERO_DOT_FOUR);
 		
 		assertThatExceptionOfType(OverallProbabilitiesUnderOneException.class)
-			.isThrownBy(() -> step.setFailureProbability(0.3))
+			.isThrownBy(() -> step.setFailureProbability(ZERO_DOT_THREE))
 			.withMessage("The three probabilities are under 1.000000: 0.900000");
-		assertThat(step.getFailureProbability()).isEqualTo(0.4);
+		assertThat(step.getFailureProbability()).isEqualTo(ZERO_DOT_FOUR);
 		
 		assertThatExceptionOfType(OverallProbabilitiesUnderOneException.class)
-			.isThrownBy(() -> step.setFailureDetectedProbability(0.1))
+			.isThrownBy(() -> step.setFailureDetectedProbability(ZERO_DOT_ONE))
 			.withMessage("The three probabilities are under 1.000000: 0.900000");
-		assertThat(step.getFailureDetectedProbability()).isEqualTo(0.2);
+		assertThat(step.getFailureDetectedProbability()).isEqualTo(ZERO_DOT_TWO);
 	}
 	
 	@Test
