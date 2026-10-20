@@ -1,0 +1,9 @@
+<attackGraph uuid="00000000-0000-0000-0000-000000000001" name="bad-uuid">
+  <vertices>
+    <access uuid="not-a-uuid" name="A1"/>
+    <goal uuid="00000000-0000-0000-0000-0000000000e1" name="G1" value="10"/>
+  </vertices>
+  <steps>
+
+  </steps>
+</attackGraph>

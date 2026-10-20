@@ -1,6 +1,5 @@
 package qesm.project.translator.scenario.dto.scenario;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class AttackScenarioXml {
     @XmlAttribute(required = true) public String name;
     @XmlAttribute(required = true) public String strategy;
     @XmlAttribute public String goalsRequired = "ANY";
-    @XmlAttribute public Duration timeBound;
+    @XmlAttribute public double timeBound;
     @XmlElement(required = true) public GraphRefXml graph;
     @XmlElementWrapper(name = "targets")        @XmlElement(name = "goalRef")   public List<RefXml> targets = new ArrayList<>();
     @XmlElementWrapper(name = "initialMarking") @XmlElement(name = "vertexRef") public List<RefXml> initialMarking = new ArrayList<>();

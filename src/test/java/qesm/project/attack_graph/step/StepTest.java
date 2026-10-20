@@ -1,4 +1,4 @@
-package qesm.project.analysis.attack_graph.step;
+package qesm.project.attack_graph.step;
 
 import java.util.UUID;
 import java.util.HashSet;
@@ -11,9 +11,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import qesm.project.attack_graph.exception.OverallProbabilitiesOverOneException;
 import qesm.project.attack_graph.exception.OverallProbabilitiesUnderOneException;
-import qesm.project.attack_graph.step.Outcome;
-import qesm.project.attack_graph.step.Requirement;
-import qesm.project.attack_graph.step.Step;
 import qesm.project.attack_graph.vertex.Goal;
 import qesm.project.attack_graph.vertex.Skill;
 import qesm.project.utility.Distribution;

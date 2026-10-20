@@ -18,7 +18,7 @@ import qesm.project.attack_graph.vertex.Goal;
 import qesm.project.attack_graph.vertex.Knowledge;
 import qesm.project.attack_graph.vertex.Skill;
 import qesm.project.attack_graph.vertex.Vertex;
-import qesm.project.translator.exception.AttackGraphLoadException;
+import qesm.project.translator.exception.AttackLoadException;
 import qesm.project.translator.graph.dto.graph.AttackGraphXml;
 import qesm.project.translator.graph.dto.step.StepXml;
 import qesm.project.translator.graph.dto.vertex.AccessXml;
@@ -26,13 +26,13 @@ import qesm.project.translator.graph.dto.vertex.GoalXml;
 import qesm.project.translator.graph.dto.vertex.KnowledgeXml;
 import qesm.project.translator.graph.dto.vertex.SkillXml;
 import qesm.project.translator.utility.DistributionXml;
-import qesm.project.translator.utility.UuidTranslator;
+import qesm.project.translator.utility.XmlHelper;
 import qesm.project.utility.Distribution;
 import qesm.project.utility.Exponential;
 
 public class AttackGraphMapper {
 
-    public static AttackGraph toAttackGraph(AttackGraphXml xml) throws AttackGraphLoadException {
+    public AttackGraph toAttackGraph(AttackGraphXml xml) throws AttackLoadException {
         Map<String, Vertex> vertices = new HashMap<>();
 
         for (AccessXml a : xml.vertices.accesses)
@@ -52,11 +52,11 @@ public class AttackGraphMapper {
         	try {
         		steps.add(toStep(s, vertices));
         	} catch(OverallProbabilitiesOverOneException | OverallProbabilitiesUnderOneException e) {
-        		throw new AttackGraphLoadException("Step '" + s.name + "' is not valid", e);
+        		throw new AttackLoadException("Step '" + s.name + "' is not valid", e);
         	}
         
         AttackGraph g = new AttackGraph(
-        			UuidTranslator.parseUuid(xml.uuid),
+        			XmlHelper.parseUuid(xml.uuid),
         			xml.name,
         			steps,
         			vertices.values().stream().collect(Collectors.toSet())
@@ -65,7 +65,7 @@ public class AttackGraphMapper {
         try {
         	g.validate();
     	} catch(StepNotValidException e) {
-    		throw new AttackGraphLoadException("Step '" + e.getStep() + "' is not valid", e);
+    		throw new AttackLoadException("Step '" + e.getStep() + "' is not valid", e);
     	}
         
         return g;
@@ -74,9 +74,9 @@ public class AttackGraphMapper {
     private static <T> T resolve(Map<String, Vertex> byId, String ref, Class<T> type, StepXml s) {
         Vertex v = byId.get(ref);
         if (v == null)
-            throw new AttackGraphLoadException("Step '" + s.name + "': unknown reference '" + ref + "'");
+            throw new AttackLoadException("Step '" + s.name + "': unknown reference '" + ref + "'");
         if (!type.isInstance(v))
-            throw new AttackGraphLoadException("Step '" + s.name + "': '" + ref + "' is not of type " + type.getSimpleName());
+            throw new AttackLoadException("Step '" + s.name + "': '" + ref + "' is not of type " + type.getSimpleName());
         return type.cast(v);
     }
     
@@ -84,23 +84,23 @@ public class AttackGraphMapper {
         if (d == null) return null;
         return switch (d.type) {
             case "exponential" -> new Exponential(d.rate);
-            default -> throw new AttackGraphLoadException("Unknown distribution: " + d.type);
+            default -> throw new AttackLoadException("Unknown distribution: " + d.type);
         };
     }
     
     private static Skill toSkill(SkillXml s) {
-    	return new Skill(UuidTranslator.parseUuid(s.uuid), s.name); }
+    	return new Skill(XmlHelper.parseUuid(s.uuid), s.name); }
     
     private static Knowledge toKnowledge(KnowledgeXml k) {
-    	return new Knowledge(UuidTranslator.parseUuid(k.uuid), k.name);
+    	return new Knowledge(XmlHelper.parseUuid(k.uuid), k.name);
     }
     
     private static Access toAccess(AccessXml a) {
-    	return new Access(UuidTranslator.parseUuid(a.uuid), a.name, toDistribution(a.detectionTime));
+    	return new Access(XmlHelper.parseUuid(a.uuid), a.name, toDistribution(a.detectionTime));
     }
     
     private static Goal toGoal(GoalXml g) {
-    	return new Goal(UuidTranslator.parseUuid(g.uuid), g.name, g.value, toDistribution(g.detectionTime));
+    	return new Goal(XmlHelper.parseUuid(g.uuid), g.name, g.value, toDistribution(g.detectionTime));
     }
     
     private static Step toStep(StepXml s, Map<String, Vertex> vertices) {
@@ -108,7 +108,7 @@ public class AttackGraphMapper {
     	Set<Outcome> outcomes = s.produces.stream().map(r -> resolve(vertices, r.ref, Outcome.class, s)).collect(Collectors.toSet());
     	
     	return new Step(
-    			UuidTranslator.parseUuid(s.uuid),
+    			XmlHelper.parseUuid(s.uuid),
     			s.name,
     			s.successProbability,
     			s.failureProbability,

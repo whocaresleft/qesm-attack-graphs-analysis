@@ -9,7 +9,6 @@ import qesm.project.attack_graph.vertex.Vertex;
 import qesm.project.attack_graph.graph.AttackGraph;
 import qesm.project.attack_graph.vertex.Goal;
 import qesm.project.attack_scenario.strategy.AttackStrategy;
-import java.time.Duration;
 
 public class AttackScenario {
 	
@@ -17,7 +16,7 @@ public class AttackScenario {
 	private String name;
 	
 	private GoalCombination goalsRequired;
-	private Duration timeBound;
+	private double timeBound;
 	
 	private AttackGraph graph;
 	private Set<Vertex> initialMarking;
@@ -28,7 +27,7 @@ public class AttackScenario {
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
 	public GoalCombination getGoalsRequired() { return goalsRequired; }
-	public Duration getTimeBound() { return timeBound; }
+	public double getTimeBound() { return timeBound; }
 	public AttackGraph getGraph() { return graph; }
 	public Set<Vertex> getInitialMarking() { return Collections.unmodifiableSet(initialMarking); }
 	public Set<Goal> getTargets() { return Collections.unmodifiableSet(targets); }
@@ -37,8 +36,8 @@ public class AttackScenario {
 	private void setUuid(UUID uuid) { this.uuid = uuid; }
 	private void setName(String name) { this.name = name; }
 	private void setGoalsRequired(GoalCombination goalsRequired) { this.goalsRequired = goalsRequired; }
-	private void setTimeBound(Duration timeBound) {
-		if (!timeBound.isPositive()) throw new IllegalArgumentException("Illegal duration, must be positive: " + timeBound);
+	private void setTimeBound(double timeBound) {
+		if (timeBound <= 0.0) throw new IllegalArgumentException("Illegal duration, must be positive: " + timeBound);
 		this.timeBound = timeBound;
 	}
 	private void setGraph(AttackGraph graph) { this.graph = graph; }
@@ -49,7 +48,7 @@ public class AttackScenario {
 		}
 	private void setStrategy(AttackStrategy strategy) { this.strategy = strategy; }
 	
-	public AttackScenario(UUID uuid, String name, AttackGraph graph, Set<Vertex> initialMarking, Set<Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, Duration timeBound) {
+	public AttackScenario(UUID uuid, String name, AttackGraph graph, Set<Vertex> initialMarking, Set<Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, double timeBound) {
 		setUuid(uuid);
 		setName(name);
 		setGraph(graph);

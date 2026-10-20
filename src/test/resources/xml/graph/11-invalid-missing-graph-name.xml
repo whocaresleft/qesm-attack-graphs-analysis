@@ -1,0 +1,14 @@
+<attackGraph uuid="00000000-0000-0000-0000-000000000001">
+  <vertices>
+    <access uuid="00000000-0000-0000-0000-0000000000a1" name="A1"/>
+    <goal uuid="00000000-0000-0000-0000-0000000000e1" name="G1" value="10"/>
+  </vertices>
+  <steps>
+    <step uuid="00000000-0000-0000-0000-000000000051" name="ST1"
+          successProbability="0.7" failureProbability="0.2" failureDetectedProbability="0.1">
+      <duration type="exponential" rate="1"/>
+      <requires ref="00000000-0000-0000-0000-0000000000a1"/>
+      <produces ref="00000000-0000-0000-0000-0000000000e1"/>
+    </step>
+  </steps>
+</attackGraph>

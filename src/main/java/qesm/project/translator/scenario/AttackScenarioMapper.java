@@ -12,19 +12,19 @@ import qesm.project.attack_scenario.strategy.Cautious;
 import qesm.project.attack_scenario.strategy.Greedy;
 import qesm.project.attack_scenario.strategy.LowHangingFruit;
 import qesm.project.attack_scenario.strategy.Random;
-import qesm.project.translator.exception.AttackGraphLoadException;
+import qesm.project.translator.exception.AttackLoadException;
 import qesm.project.translator.scenario.dto.scenario.AttackScenarioXml;
-import qesm.project.translator.utility.UuidTranslator;
+import qesm.project.translator.utility.XmlHelper;
 import qesm.project.utility.GoalCombination;
 
 public class AttackScenarioMapper {
     public AttackScenario toAttackScenario(AttackScenarioXml xml, AttackGraph graph) {
         Set<Goal> targets = xml.targets.stream().map(r -> findGoal(graph, r.ref, xml.name)).collect(Collectors.toSet());
-        Set<Vertex> initialMarking = xml.initialMarking.stream().map(r -> graph.getVertexByUuid(UuidTranslator.parseUuid(r.ref))
-                .orElseThrow(() -> new AttackGraphLoadException("Scenario '" + xml.name + "': vertex unknown " + r.ref))).collect(Collectors.toSet());
+        Set<Vertex> initialMarking = xml.initialMarking.stream().map(r -> graph.getVertexByUuid(XmlHelper.parseUuid(r.ref))
+                .orElseThrow(() -> new AttackLoadException("Scenario '" + xml.name + "': vertex unknown " + r.ref))).collect(Collectors.toSet());
         
         return new AttackScenario(
-        		UuidTranslator.parseUuid(xml.uuid),
+        		XmlHelper.parseUuid(xml.uuid),
         		xml.name,
         		graph,
         		initialMarking,
@@ -36,10 +36,10 @@ public class AttackScenarioMapper {
     }
     
     private static Goal findGoal(AttackGraph graph, String ref, String scenario) {
-    	Vertex vertex = graph.getVertexByUuid(UuidTranslator.parseUuid(ref))
-			.orElseThrow(() -> new AttackGraphLoadException("Scenario '" + scenario + "': target unknown " + ref));
+    	Vertex vertex = graph.getVertexByUuid(XmlHelper.parseUuid(ref))
+			.orElseThrow(() -> new AttackLoadException("Scenario '" + scenario + "': target unknown " + ref));
     	if (!(vertex instanceof Goal goal)) {
-    		throw new AttackGraphLoadException("Vertex '" + vertex.getName() + "' is not a Goal");
+    		throw new AttackLoadException("Vertex '" + vertex.getName() + "' is not a Goal");
     	}
     	return goal;
     }
@@ -50,17 +50,17 @@ public class AttackScenarioMapper {
         	case "cautious" -> new Cautious();
         	case "low-hanging-fruit" -> new LowHangingFruit();
         	case "random" -> new Random();
-        	default -> throw new AttackGraphLoadException("Strategy unknown: " + as);
+        	default -> throw new AttackLoadException("Strategy unknown: " + as);
     	}; }
     	catch (NullPointerException e) {
-    		throw new AttackGraphLoadException("Attack strategy is null", e);
+    		throw new AttackLoadException("Attack strategy is null", e);
     	}
     }
     
     private static GoalCombination toGoalCombination(String gr) {
     	try { return GoalCombination.valueOf(gr.trim().toUpperCase()); }
     	catch (IllegalArgumentException e) {
-    		throw new AttackGraphLoadException("GoalCombination unknown: " + gr, e);
+    		throw new AttackLoadException("GoalCombination unknown: " + gr, e);
     	}
     }
 }
