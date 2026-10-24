@@ -1,7 +1,7 @@
 package qesm.project.translator.scenario.dto.scenario;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -22,7 +22,7 @@ public class AttackScenarioXml {
     @XmlAttribute public String goalsRequired = "ANY";
     @XmlAttribute public double timeBound;
     @XmlElement(required = true) public GraphRefXml graph;
-    @XmlElementWrapper(name = "targets")        @XmlElement(name = "goalRef")   public List<RefXml> targets = new ArrayList<>();
-    @XmlElementWrapper(name = "initialMarking") @XmlElement(name = "vertexRef") public List<RefXml> initialMarking = new ArrayList<>();
-    @XmlElementWrapper(name = "failConditions") public List<FailConditionXml> failConditions = new ArrayList<>();
+    @XmlElementWrapper(name = "targets")        @XmlElement(name = "goalRef")   public Set<RefXml> targets = new LinkedHashSet<>();
+    @XmlElementWrapper(name = "initialMarking") @XmlElement(name = "vertexRef") public Set<RefXml> initialMarking = new LinkedHashSet<>();
+    @XmlElementWrapper(name = "failConditions") public Set<FailConditionXml> failConditions = new LinkedHashSet<>();
 }

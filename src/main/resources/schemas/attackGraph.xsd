@@ -75,7 +75,7 @@
     <!--Utility Types (DistributionXml, RefXml)-->
     <xs:complexType name="DistributionType">
         <xs:attribute name="type" type="xs:string" use="required"/>
-        <xs:attribute name="rate" type="xs:double" use="optional"/>
+        <xs:attribute name="rate" type="xs:double" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="RefType">

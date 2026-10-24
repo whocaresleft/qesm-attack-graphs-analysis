@@ -1,7 +1,8 @@
 package qesm.project.translator.graph.dto.graph;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -19,5 +20,22 @@ public class AttackGraphXml {
     @XmlAttribute(required = true) public String name;
     @XmlElement(name = "vertices") public VerticesXml vertices = new VerticesXml();
     @XmlElementWrapper(name = "steps")
-    @XmlElement(name = "step") public List<StepXml> steps = new ArrayList<>();
+    @XmlElement(name = "step") public Set<StepXml> steps = new LinkedHashSet<>();
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, steps, uuid, vertices);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AttackGraphXml other = (AttackGraphXml) obj;
+		return Objects.equals(name, other.name) && Objects.equals(steps, other.steps)
+				&& Objects.equals(uuid, other.uuid) && Objects.equals(vertices, other.vertices);
+	}
 }

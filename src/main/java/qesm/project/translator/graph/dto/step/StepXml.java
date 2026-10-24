@@ -1,7 +1,8 @@
 package qesm.project.translator.graph.dto.step;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -19,6 +20,30 @@ public class StepXml {
     @XmlAttribute(required = true) public double failureDetectedProbability;
     @XmlElement(required = true) public DistributionXml duration;
     @XmlElement public DistributionXml detectionTime;
-    @XmlElement(name = "requires") public List<RefXml> requires = new ArrayList<>();
-    @XmlElement(name = "produces") public List<RefXml> produces = new ArrayList<>();
+    @XmlElement(name = "requires") public Set<RefXml> requires = new LinkedHashSet<>();
+    @XmlElement(name = "produces") public Set<RefXml> produces = new LinkedHashSet<>();
+    
+	@Override
+	public int hashCode() {
+		return Objects.hash(detectionTime, duration, Double.valueOf(failureDetectedProbability),
+				Double.valueOf(failureProbability), name, produces, requires, Double.valueOf(successProbability), uuid);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StepXml other = (StepXml) obj;
+		return Objects.equals(detectionTime, other.detectionTime) && Objects.equals(duration, other.duration)
+				&& Double.doubleToLongBits(failureDetectedProbability) == Double
+						.doubleToLongBits(other.failureDetectedProbability)
+				&& Double.doubleToLongBits(failureProbability) == Double.doubleToLongBits(other.failureProbability)
+				&& Objects.equals(name, other.name) && Objects.equals(produces, other.produces)
+				&& Objects.equals(requires, other.requires)
+				&& Double.doubleToLongBits(successProbability) == Double.doubleToLongBits(other.successProbability)
+				&& Objects.equals(uuid, other.uuid);
+	}
 }
