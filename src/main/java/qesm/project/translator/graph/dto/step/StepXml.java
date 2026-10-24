@@ -1,7 +1,7 @@
 package qesm.project.translator.graph.dto.step;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -19,6 +19,6 @@ public class StepXml {
     @XmlAttribute(required = true) public double failureDetectedProbability;
     @XmlElement(required = true) public DistributionXml duration;
     @XmlElement public DistributionXml detectionTime;
-    @XmlElement(name = "requires") public Set<RefXml> requires = new HashSet<>();
-    @XmlElement(name = "produces") public Set<RefXml> produces = new HashSet<>();
+    @XmlElement(name = "requires") public List<RefXml> requires = new ArrayList<>();
+    @XmlElement(name = "produces") public List<RefXml> produces = new ArrayList<>();
 }

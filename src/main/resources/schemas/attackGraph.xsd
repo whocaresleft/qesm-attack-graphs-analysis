@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--AttackGraphXml-->
+    <xs:element name="attackGraph">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="vertices" type="VerticesType" minOccurs="0"/>
+                <xs:element name="steps" type="StepsWrapperType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="uuid" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!--VerticesXml-->
+    <xs:complexType name="VerticesType">
+        <xs:sequence>
+            <xs:element name="access" type="AccessType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="skill" type="SkillType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="knowledge" type="KnowledgeType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="goal" type="GoalType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--Vertex type (AccessXml, SkillXml, KnowledgeXml, GoalXml)-->
+    <xs:complexType name="AccessType">
+        <xs:sequence>
+            <xs:element name="detectionTime" type="DistributionType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="uuid" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="SkillType">
+        <xs:attribute name="uuid" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="KnowledgeType">
+        <xs:attribute name="uuid" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="GoalType">
+        <xs:sequence>
+            <xs:element name="detectionTime" type="DistributionType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="uuid" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:double" use="required"/>
+    </xs:complexType>
+
+    <!--Steps Wrapper and StepXml-->
+    <xs:complexType name="StepsWrapperType">
+        <xs:sequence>
+            <xs:element name="step" type="StepType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StepType">
+        <xs:sequence>
+            <xs:element name="duration" type="DistributionType" minOccurs="1"/>
+            <xs:element name="detectionTime" type="DistributionType" minOccurs="0"/>
+            <xs:element name="requires" type="RefType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="produces" type="RefType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="uuid" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="successProbability" type="xs:double" use="required"/>
+        <xs:attribute name="failureProbability" type="xs:double" use="required"/>
+        <xs:attribute name="failureDetectedProbability" type="xs:double" use="required"/>
+    </xs:complexType>
+
+    <!--Utility Types (DistributionXml, RefXml)-->
+    <xs:complexType name="DistributionType">
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="rate" type="xs:double" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="RefType">
+        <xs:attribute name="ref" type="xs:string" use="required"/>
+    </xs:complexType>
+
+</xs:schema>

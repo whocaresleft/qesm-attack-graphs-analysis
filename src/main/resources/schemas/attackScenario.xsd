@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--AttackScenarioXml-->
+    <xs:element name="attackScenario">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="graph" type="GraphRefType" minOccurs="1"/>
+                <xs:element name="targets" type="TargetsWrapperType" minOccurs="0"/>
+                <xs:element name="initialMarking" type="InitialMarkingWrapperType" minOccurs="0"/>
+                <xs:element name="failConditions" type="FailConditionsWrapperType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="uuid" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="strategy" type="xs:string" use="required"/>
+            <xs:attribute name="goalsRequired" type="xs:string" use="optional"/>
+            <xs:attribute name="timeBound" type="xs:double" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!--GraphRefXml-->
+    <xs:complexType name="GraphRefType">
+        <xs:attribute name="ref" type="xs:string" use="optional"/>
+        <xs:attribute name="file" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <!--Wrapper List types-->
+    <xs:complexType name="TargetsWrapperType">
+        <xs:sequence>
+            <!--Mapped from @XmlElement(name = "goalRef")-->
+            <xs:element name="goalRef" type="RefType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InitialMarkingWrapperType">
+        <xs:sequence>
+            <!--Mapped from @XmlElement(name = "vertexRef")-->
+            <xs:element name="vertexRef" type="RefType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FailConditionsWrapperType">
+        <xs:sequence>
+            <xs:element name="failConditions" type="FailConditionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--Base elements-->
+    <xs:complexType name="FailConditionType">
+        <!--FailConditionXml-->
+    </xs:complexType>
+
+    <xs:complexType name="RefType">
+        <xs:attribute name="ref" type="xs:string" use="required"/>
+    </xs:complexType>
+
+</xs:schema>
