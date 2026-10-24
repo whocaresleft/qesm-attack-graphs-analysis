@@ -49,6 +49,7 @@ public class AttackGraph {
 	
 	public void validate() throws StepNotValidException {
 		for (Step step : steps.values()) {
+			System.out.println("S-- " + step + " --S");
 			if (!step
 				.getProduces()
 				.stream()

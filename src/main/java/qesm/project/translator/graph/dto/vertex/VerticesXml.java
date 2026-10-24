@@ -31,4 +31,10 @@ public class VerticesXml {
 		return Objects.equals(accesses, other.accesses) && Objects.equals(goals, other.goals)
 				&& Objects.equals(knowledge, other.knowledge) && Objects.equals(skills, other.skills);
 	}
+	
+	@Override
+	public String toString() {
+		return "VerticesXml [accesses=" + accesses + ", skills=" + skills + ", knowledge=" + knowledge + ", goals="
+				+ goals + "]";
+	}
 }

@@ -26,4 +26,9 @@ public class KnowledgeXml {
 		KnowledgeXml other = (KnowledgeXml) obj;
 		return Objects.equals(name, other.name) && Objects.equals(uuid, other.uuid);
 	}
+	
+	@Override
+	public String toString() {
+		return "KnowledgeXml [uuid=" + uuid + ", name=" + name + "]";
+	}
 }

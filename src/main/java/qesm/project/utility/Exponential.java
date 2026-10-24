@@ -2,17 +2,21 @@ package qesm.project.utility;
 
 import java.util.Objects;
 
+import qesm.project.attack_graph.exception.InvalidExponentialException;
+
 public class Exponential extends Distribution {
 	private double rate;
 	
 	public Exponential(double rate) {
-		super();
 		setRate(rate);
 	}
 
 	public double getRate() { return rate; }
 
-	private void setRate(double rate) { this.rate = rate; }
+	private void setRate(double rate) {
+		if (rate <= 0) throw new InvalidExponentialException(rate);
+		this.rate = rate;
+	}
 
 	@Override
 	public int hashCode() {

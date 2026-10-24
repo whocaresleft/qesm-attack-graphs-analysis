@@ -26,4 +26,9 @@ public class GraphRefXml {
 		GraphRefXml other = (GraphRefXml) obj;
 		return Objects.equals(file, other.file) && Objects.equals(ref, other.ref);
 	}
+	
+	@Override
+	public String toString() {
+		return "GraphRefXml [ref=" + ref + ", file=" + file + "]";
+	}
 }

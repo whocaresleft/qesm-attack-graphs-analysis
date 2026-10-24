@@ -1,6 +1,7 @@
 package qesm.project.translator.scenario.dto.scenario;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,4 +26,33 @@ public class AttackScenarioXml {
     @XmlElementWrapper(name = "targets")        @XmlElement(name = "goalRef")   public Set<RefXml> targets = new LinkedHashSet<>();
     @XmlElementWrapper(name = "initialMarking") @XmlElement(name = "vertexRef") public Set<RefXml> initialMarking = new LinkedHashSet<>();
     @XmlElementWrapper(name = "failConditions") public Set<FailConditionXml> failConditions = new LinkedHashSet<>();
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(failConditions, goalsRequired, graph, initialMarking, name, strategy, targets,
+				Double.valueOf(timeBound), uuid);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AttackScenarioXml other = (AttackScenarioXml) obj;
+		return Objects.equals(failConditions, other.failConditions)
+				&& Objects.equals(goalsRequired, other.goalsRequired) && Objects.equals(graph, other.graph)
+				&& Objects.equals(initialMarking, other.initialMarking) && Objects.equals(name, other.name)
+				&& Objects.equals(strategy, other.strategy) && Objects.equals(targets, other.targets)
+				&& Double.doubleToLongBits(timeBound) == Double.doubleToLongBits(other.timeBound)
+				&& Objects.equals(uuid, other.uuid);
+	}
+	
+	@Override
+	public String toString() {
+		return "AttackScenarioXml [uuid=" + uuid + ", name=" + name + ", strategy=" + strategy + ", goalsRequired="
+				+ goalsRequired + ", timeBound=" + timeBound + ", graph=" + graph + ", targets=" + targets
+				+ ", initialMarking=" + initialMarking + ", failConditions=" + failConditions + "]";
+	}
 }

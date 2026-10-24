@@ -46,4 +46,12 @@ public class StepXml {
 				&& Double.doubleToLongBits(successProbability) == Double.doubleToLongBits(other.successProbability)
 				&& Objects.equals(uuid, other.uuid);
 	}
+	
+	@Override
+	public String toString() {
+		return "StepXml [uuid=" + uuid + ", name=" + name + ", successProbability=" + successProbability
+				+ ", failureProbability=" + failureProbability + ", failureDetectedProbability="
+				+ failureDetectedProbability + ", duration=" + duration + ", detectionTime=" + detectionTime
+				+ ", requires=" + requires + ", produces=" + produces + "]";
+	}
 }

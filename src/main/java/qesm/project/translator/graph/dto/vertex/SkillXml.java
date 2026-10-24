@@ -26,4 +26,9 @@ public class SkillXml {
 		SkillXml other = (SkillXml) obj;
 		return Objects.equals(name, other.name) && Objects.equals(uuid, other.uuid);
 	}
+	
+	@Override
+	public String toString() {
+		return "SkillXml [uuid=" + uuid + ", name=" + name + "]";
+	}
 }

@@ -30,4 +30,9 @@ public class AccessXml {
 		return Objects.equals(detectionTime, other.detectionTime) && Objects.equals(name, other.name)
 				&& Objects.equals(uuid, other.uuid);
 	}
+	
+	@Override
+	public String toString() {
+		return "AccessXml [uuid=" + uuid + ", name=" + name + ", detectionTime=" + detectionTime + "]";
+	}
 }

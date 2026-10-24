@@ -26,4 +26,9 @@ public class RefXml {
 		RefXml other = (RefXml) obj;
 		return Objects.equals(ref, other.ref);
 	}
+
+	@Override
+	public String toString() {
+		return "RefXml [ref=" + ref + "]";
+	}
 }

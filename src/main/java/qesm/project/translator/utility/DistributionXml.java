@@ -26,4 +26,9 @@ public class DistributionXml {
 		DistributionXml other = (DistributionXml) obj;
 		return Objects.equals(rate, other.rate) && Objects.equals(type, other.type);
 	}
+	
+	@Override
+	public String toString() {
+		return "DistributionXml [type=" + type + ", rate=" + rate + "]";
+	}
 }

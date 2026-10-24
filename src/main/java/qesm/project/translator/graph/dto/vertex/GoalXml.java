@@ -32,4 +32,10 @@ public class GoalXml {
 				&& Objects.equals(uuid, other.uuid)
 				&& Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
 	}
+	
+	@Override
+	public String toString() {
+		return "GoalXml [uuid=" + uuid + ", name=" + name + ", value=" + value + ", detectionTime=" + detectionTime
+				+ "]";
+	}
 }

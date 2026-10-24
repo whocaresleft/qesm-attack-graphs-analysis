@@ -38,4 +38,9 @@ public class AttackGraphXml {
 		return Objects.equals(name, other.name) && Objects.equals(steps, other.steps)
 				&& Objects.equals(uuid, other.uuid) && Objects.equals(vertices, other.vertices);
 	}
+	
+	@Override
+	public String toString() {
+		return "AttackGraphXml [uuid=" + uuid + ", name=" + name + ", vertices=" + vertices + ", steps=" + steps + "]";
+	}
 }

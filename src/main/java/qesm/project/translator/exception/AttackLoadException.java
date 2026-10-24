@@ -7,12 +7,11 @@ public class AttackLoadException extends RuntimeException {
 	private final Throwable cause;
 
 	public AttackLoadException(String message) {
-		super(message);
-		this.cause = null;
+		this(message, null);
 	}
 	
 	public AttackLoadException(String message, Throwable cause) {
-		super(message);
+		super("Error while loading: " + message);
 		this.cause = cause;
 	}
 	

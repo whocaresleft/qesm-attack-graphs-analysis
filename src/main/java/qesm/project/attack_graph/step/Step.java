@@ -3,6 +3,7 @@ package qesm.project.attack_graph.step;
 import java.util.Objects;
 import java.util.UUID;
 
+import qesm.project.attack_graph.exception.NegativeProbabilityException;
 import qesm.project.attack_graph.exception.OverallProbabilitiesOverOneException;
 import qesm.project.attack_graph.exception.OverallProbabilitiesUnderOneException;
 import qesm.project.utility.Distribution;
@@ -34,7 +35,7 @@ public class Step {
 		Distribution duration,
 		Distribution detectionTime,
 		Set<Requirement> requires,
-		Set<Outcome> produce
+		Set<Outcome> produces
 	) {
 		setUuid(uuid);
 		setName(name);
@@ -78,10 +79,16 @@ public class Step {
 	public void setRequires(Set<Requirement> requires) { this.requires = requires; }
 	public void setProduces(Set<Outcome> produces) { this.produces = produces; }
 	
-	private static void validateProbabilities(double p1, double p2, double p3) throws OverallProbabilitiesOverOneException {
+	private static void validateProbabilities(double p1, double p2, double p3) throws NegativeProbabilityException, OverallProbabilitiesOverOneException, OverallProbabilitiesUnderOneException {
+		if (p1 < 0) throw new NegativeProbabilityException(p1);
+		if (p2 < 0) throw new NegativeProbabilityException(p2);
+		if (p3 < 0) throw new NegativeProbabilityException(p3);
+		
 		double sum = p1 + p2 + p3;
-		if (sum > 1.0) throw new OverallProbabilitiesOverOneException(sum);
-		if (sum < 1.0) throw new OverallProbabilitiesUnderOneException(sum);
+		double epsilon = 1e-6;
+		
+		if (sum > 1.0 + epsilon) throw new OverallProbabilitiesOverOneException(sum);
+		if (sum < 1.0 - epsilon) throw new OverallProbabilitiesUnderOneException(sum);
 	}
 	
 	public void addRequirement(Requirement r) { if (!requires.contains(r)) requires.add(r); }
