@@ -46,7 +46,7 @@ public class XmlHelper {
 	
 	public static UUID parseUuid(String raw) {
 		try {
-			return UUID.fromString(raw);
+			return UUID.fromString(raw.trim().toLowerCase());
 		} catch (IllegalArgumentException | NullPointerException e) {
 			throw new IllegalArgumentException("Invalid UUID: '" + raw + "'", e);
 		}

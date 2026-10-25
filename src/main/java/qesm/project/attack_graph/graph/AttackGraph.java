@@ -7,11 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import qesm.project.attack_graph.exception.StepNotValidException;
 import qesm.project.attack_graph.step.Step;
 import qesm.project.attack_graph.vertex.Vertex;
 
-public class AttackGraph {
+public final class AttackGraph {
 	
 	private UUID uuid;
 	private String name;
@@ -19,7 +18,7 @@ public class AttackGraph {
 	private Map<UUID, Step> steps;
 	private Map<UUID, Vertex> vertices;
 	
-	public AttackGraph(UUID uuid, String name, Set<Step> steps, Set<Vertex> vertices) {
+	AttackGraph(UUID uuid, String name, Map<UUID, Step> steps, Map<UUID, Vertex> vertices) {
 		setUuid(uuid);
 		setName(name);
 		setSteps(steps);
@@ -33,11 +32,8 @@ public class AttackGraph {
 	
 	private void setUuid(UUID uuid) { this.uuid = uuid; }
 	private void setName(String name) { this.name = name; }
-	public void setSteps(Set<Step> steps) { this.steps = steps.stream().collect(Collectors.toMap(Step::getUuid, step -> step)); }
-	public void setVertices(Set<Vertex> vertices) { this.vertices = vertices.stream().collect(Collectors.toMap(Vertex::getUuid, vertex -> vertex)); }
-	
-	public void addVertex(Vertex vertex) { vertices.put(vertex.getUuid(), vertex); }
-	public void addStep(Step step) { steps.put(step.getUuid(), step); }
+	private void setSteps(Map<UUID ,Step> steps) { this.steps = steps; }
+	private void setVertices(Map<UUID, Vertex> vertices) { this.vertices = vertices; }
 	
 	public Optional<Vertex> getVertexByUuid(UUID uuid) {
 		return Optional.ofNullable(vertices.get(uuid));
@@ -45,26 +41,6 @@ public class AttackGraph {
 	
 	public Optional<Step> getStepByUuid(UUID uuid) {
 		return Optional.ofNullable(steps.get(uuid));
-	}
-	
-	public void validate() throws StepNotValidException {
-		for (Step step : steps.values()) {
-			System.out.println("S-- " + step + " --S");
-			if (!step
-				.getProduces()
-				.stream()
-				.filter(outcome -> !vertices.containsValue((Vertex)outcome))
-				.toList()
-				.isEmpty()
-			) { throw new StepNotValidException(step); }
-			if (!step
-				.getRequires()
-				.stream()
-				.filter(requirement -> !vertices.containsValue((Vertex)requirement))
-				.toList()
-				.isEmpty()
-			) { throw new StepNotValidException(step); }
-		}
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-<attackGraph uuid="00000000-0000-0000-0000-000000000001" name="dead-requirement">
+<attackGraph uuid="00000000-0000-0000-0000-000000000001" name="unused-access">
   <vertices>
     <access uuid="00000000-0000-0000-0000-0000000000a1" name="A1"/>
     <access uuid="00000000-0000-0000-0000-0000000000a2" name="A2"/>
