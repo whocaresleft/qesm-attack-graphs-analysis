@@ -39,6 +39,8 @@ import qesm.project.utility.NoneDistribution;
 public class AttackGraphMapper {
 
     public AttackGraph toAttackGraph(AttackGraphXml xml) throws AttackMapException {
+    	if (xml == null) throw new AttackMapException("AttackGraph Xml is null");
+    	
         Map<UUID, Vertex> vertices = new HashMap<>();
 
         for (AccessXml a : xml.vertices.accesses)

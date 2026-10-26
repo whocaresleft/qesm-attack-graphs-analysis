@@ -24,6 +24,12 @@ import qesm.project.utility.GoalCombination;
 
 public class AttackScenarioMapper {
     public AttackScenario toAttackScenario(AttackScenarioXml xml, AttackGraph graph) {
+    	if (xml == null) throw new AttackMapException("AttackScenario Xml is null");
+    	if (xml.graph == null) throw new AttackMapException("AttackScenario Xml '<graph>' is null");
+    	if (!XmlHelper.parseUuid(xml.graph.ref).equals(graph.getUuid())) {
+    		throw new AttackMapException("Graph uuid is not coherent with given AttackGraph");
+    	}
+    	
         Set<Goal> targets = xml.targets.stream().map(r -> findGoal(graph, r.ref, xml.name)).collect(Collectors.toSet());
         Set<Vertex> initialMarking = xml.initialMarking.stream().map(r -> graph.getVertexByUuid(XmlHelper.parseUuid(r.ref))
                 .orElseThrow(() -> new AttackMapException("Scenario '" + xml.name + "': vertex unknown " + r.ref))).collect(Collectors.toSet());

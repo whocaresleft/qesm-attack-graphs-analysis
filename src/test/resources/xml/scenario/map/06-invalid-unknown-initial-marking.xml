@@ -4,7 +4,7 @@
                 strategy="greedy"
                 goalsRequired="ANY"
                 timeBound="100.0">
-    <graph file="sampleGraph.xml"/>
+    <graph ref="00000000-0000-0000-0000-000000000001"/>
     <targets>
         <goalRef ref="00000000-0000-0000-0000-0000000000e1"/>
     </targets>

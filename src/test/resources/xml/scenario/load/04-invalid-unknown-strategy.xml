@@ -1,5 +1,5 @@
 <attackScenario uuid="00000000-0000-0000-0000-000000000002" name="scenario" strategy="fast" goalsRequired="ANY" timeBound="100">
-  <graph file="graph.xml"/>
+  <graph ref="00000000-0000-0000-0000-000000000001"/>
   <targets><goalRef ref="00000000-0000-0000-0000-0000000000e1"/></targets>
-  <failCondition type="any-detection"/>
+  <failCondition type="anydetection"/>
 </attackScenario>

@@ -117,7 +117,8 @@ public class AttackScenarioMapperTest {
 		@CsvSource({
 			"04-invalid-unknown-target,Error while mapping: Scenario 'UnknownTarget': target unknown 00000000-0000-0000-0000-999999999999",
 			"05-invalid-target-is-not-goal,Error while mapping: Vertex 'A1' is not a Goal",
-			"06-invalid-unknown-initial-marking,Error while mapping: Scenario 'UnknownMarking': vertex unknown 00000000-0000-0000-0000-999999999999"
+			"06-invalid-unknown-initial-marking,Error while mapping: Scenario 'UnknownMarking': vertex unknown 00000000-0000-0000-0000-999999999999",
+			"07-invalid-mismatched-graph-uuid,Error while mapping: Graph uuid is not coherent with given AttackGraph"
 		})
 		void xmlGraphInvalidXmlShouldThrowAttackMapException(String fileName, String expectedErrorMessage) {
 			AttackScenarioXml xml = AttackScenarioXmlLoader.load(resource(fileName + ".xml"));

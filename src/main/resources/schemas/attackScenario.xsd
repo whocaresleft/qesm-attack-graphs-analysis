@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+	<xs:include schemaLocation="common.xsd"/>
+
     <!-- AttackScenario -->
     <xs:element name="attackScenario">
         <xs:complexType>
             <xs:sequence>
                 <!-- UML: -graph 1 -->
-                <xs:element name="graph" type="GraphRefType"/>
+                <xs:element name="graph" type="RefType"/>
                 <!-- UML: -targets 1..* -->
                 <xs:element name="targets" type="TargetsType"/>
                 <!-- UML: -initialMarking 0..* -->
@@ -14,8 +16,8 @@
                 <!-- UML: -failConditions 1..* -->
                 <xs:element name="failCondition" type="FailConditionType"/>
             </xs:sequence>
-            <xs:attribute name="uuid"          type="UuidType"            use="required"/>
-            <xs:attribute name="name"          type="NameType"            use="required"/>
+            <xs:attribute name="uuid"          type="xs:string"            use="required"/>
+            <xs:attribute name="name"          type="xs:string"            use="required"/>
             <xs:attribute name="strategy"      type="StrategyType"        use="required"/>
             <xs:attribute name="goalsRequired" type="GoalCombinationType" use="required"/>
             <xs:attribute name="timeBound"     type="TimeBoundType"       use="required"/>
@@ -31,11 +33,6 @@
             <xs:field xpath="@ref"/>
         </xs:unique>
     </xs:element>
-
-    <!-- Riferimento al grafo: solo file -->
-    <xs:complexType name="GraphRefType">
-        <xs:attribute name="file" type="NameType" use="required"/>
-    </xs:complexType>
 
     <!-- Liste -->
     <xs:complexType name="TargetsType">
@@ -61,23 +58,6 @@
 	        <xs:enumeration value="neverfail"/>
 	    </xs:restriction>
 	</xs:simpleType>
-
-    <xs:complexType name="RefType">
-        <xs:attribute name="ref" type="UuidType" use="required"/>
-    </xs:complexType>
-
-    <!-- Tipi semplici -->
-    <xs:simpleType name="UuidType">
-        <xs:restriction base="xs:token">
-            <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="NameType">
-        <xs:restriction base="xs:token">
-            <xs:minLength value="1"/>
-        </xs:restriction>
-    </xs:simpleType>
 
     <!-- UML: Strategy, con Greedy, Cautious, Random (il tuo mapper aggiunge low-hanging-fruit) -->
     <xs:simpleType name="StrategyType">

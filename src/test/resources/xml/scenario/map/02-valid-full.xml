@@ -4,7 +4,7 @@
                 strategy="cautious"
                 goalsRequired="ALL"
                 timeBound="3600.5">
-    <graph file="sampleGraph.xml"/>
+    <graph ref="00000000-0000-0000-0000-000000000001"/>
     <targets>
         <goalRef ref="00000000-0000-0000-0000-0000000000e1"/>
         <goalRef ref="00000000-0000-0000-0000-0000000000e2"/>

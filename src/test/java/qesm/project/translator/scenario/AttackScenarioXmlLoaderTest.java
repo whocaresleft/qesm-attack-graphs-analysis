@@ -35,8 +35,7 @@ public class AttackScenarioXmlLoaderTest {
 			
 			assertThat(xml.timeBound).isBetween(100.0 - EPSILON, 100.0 + EPSILON);
 			
-			assertThat(xml.graph.ref).isNull();
-			assertThat(xml.graph.file).isEqualTo("graph.xml");
+			assertThat(xml.graph.ref).isEqualTo("00000000-0000-0000-0000-000000000001");
 			
 			assertThat(xml.targets)
 				.hasSize(1)
@@ -62,8 +61,7 @@ public class AttackScenarioXmlLoaderTest {
 			
 			assertThat(xml.timeBound).isBetween(100.5 - EPSILON, 100.5 + EPSILON);
 			
-			assertThat(xml.graph.ref).isNull();
-			assertThat(xml.graph.file).isEqualTo("graph.xml");
+			assertThat(xml.graph.ref).isEqualTo("00000000-0000-0000-0000-000000000001");
 			
 			assertThat(xml.targets)
 				.hasSize(2)
@@ -101,8 +99,7 @@ public class AttackScenarioXmlLoaderTest {
 			
 			assertThat(xml.timeBound).isBetween(100 - EPSILON, 100 + EPSILON);
 			
-			assertThat(xml.graph.ref).isNull();
-			assertThat(xml.graph.file).isEqualTo("missing.xml");
+			assertThat(xml.graph.ref).isEqualTo("00000000-0000-0000-0000-000000000001");
 			
 			assertThat(xml.targets)
 				.hasSize(1)
@@ -119,7 +116,7 @@ public class AttackScenarioXmlLoaderTest {
 			
 		@ParameterizedTest(name = "{index}: ''{0}''")
 		@CsvSource({
-			"04-invalid-bad-uuid-ref",
+			"04-invalid-unknown-strategy",
 			"05-invalid-duplicate-target",
 			"06-invalid-element-order",
 			"07-invalid-empty-targets",
@@ -129,7 +126,6 @@ public class AttackScenarioXmlLoaderTest {
 			"11-invalid-timebound-zero",
 			"12-invalid-unknown-element",
 			"13-invalid-unknown-failcondition",
-			"14-invalid-unknown-strategy",
 			"15-io-empty",
 			"16-io-malformed",
 			"17-io-wrong-root",

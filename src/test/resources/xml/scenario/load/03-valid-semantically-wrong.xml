@@ -1,5 +1,5 @@
 <attackScenario uuid="00000000-0000-0000-0000-000000000002" name="scenario" strategy="greedy" goalsRequired="ANY" timeBound="100">
-  <graph file="missing.xml"/>
+  <graph ref="00000000-0000-0000-0000-000000000001"/>
   <targets><goalRef ref="00000000-0000-0000-0000-0000000000ff"/></targets>
   <failCondition type="anydetection"/>
 </attackScenario>

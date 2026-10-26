@@ -9,11 +9,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GraphRefXml {
     @XmlAttribute public String ref;
-    @XmlAttribute public String file;
     
 	@Override
 	public int hashCode() {
-		return Objects.hash(file, ref);
+		return Objects.hash(ref);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -24,11 +23,11 @@ public class GraphRefXml {
 		if (getClass() != obj.getClass())
 			return false;
 		GraphRefXml other = (GraphRefXml) obj;
-		return Objects.equals(file, other.file) && Objects.equals(ref, other.ref);
+		return Objects.equals(ref, other.ref);
 	}
 	
 	@Override
 	public String toString() {
-		return "GraphRefXml [ref=" + ref + ", file=" + file + "]";
+		return "GraphRefXml [ref=" + ref + "]";
 	}
 }

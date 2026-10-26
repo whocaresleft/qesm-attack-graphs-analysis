@@ -4,9 +4,8 @@
                 strategy="greedy"
                 goalsRequired="ANY"
                 timeBound="100.0">
-    <graph file="sampleGraph.xml"/>
+    <graph ref="00000000-0000-0000-0000-000000000001"/>
     <targets>
-        <!-- UUID che nel grafo appartiene ad un Access e non a un Goal -->
         <goalRef ref="00000000-0000-0000-0000-0000000000a1"/>
     </targets>
     <failCondition type="neverfail"/>

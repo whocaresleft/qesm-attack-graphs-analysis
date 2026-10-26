@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:include schemaLocation="common.xsd"/>
+    <xs:include schemaLocation="attackGraph.xsd"/>
+    <xs:include schemaLocation="attackScenario.xsd"/>
+
+    <!-- AttackModelXml -->
+    <xs:element name="attackModel">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- AttackGraphXml graph -->
+                <xs:element ref="attackGraph"/>
+                <!-- Set<AttackScenarioXml> scenarios -->
+                <xs:element ref="attackScenario" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+
+        <xs:unique name="uniqueScenarioUuid">
+            <xs:selector xpath="attackScenario"/>
+            <xs:field xpath="@uuid"/>
+        </xs:unique>
+
+        <xs:key name="goalKey">
+            <xs:selector xpath="attackGraph/vertices/goal"/>
+            <xs:field xpath="@uuid"/>
+        </xs:key>
+
+        <xs:key name="vertexKey">
+            <xs:selector xpath="attackGraph/vertices/*"/>
+            <xs:field xpath="@uuid"/>
+        </xs:key>
+
+        <xs:keyref name="targetGoalRef" refer="goalKey">
+            <xs:selector xpath="attackScenario/targets/goalRef"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+
+        <xs:keyref name="markingVertexRef" refer="vertexKey">
+            <xs:selector xpath="attackScenario/initialMarking/vertexRef"/>
+            <xs:field xpath="@ref"/>
+        </xs:keyref>
+    </xs:element>
+
+</xs:schema>

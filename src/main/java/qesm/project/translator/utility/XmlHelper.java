@@ -10,15 +10,17 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.ValidationEvent;
 import qesm.project.translator.exception.AttackLoadException;
-import qesm.project.translator.graph.dto.graph.AttackGraphXml;
-import qesm.project.translator.scenario.dto.scenario.AttackScenarioXml;
 
 public class XmlHelper {
 	
 	private static final JAXBContext CTX = createContext();
 	
 	public static JAXBContext createContext() {
-		try { return JAXBContext.newInstance(AttackGraphXml.class, AttackScenarioXml.class); }
+		try { return JAXBContext.newInstance(
+				qesm.project.translator.model.dto.AttackModelXml.class,
+				qesm.project.translator.graph.dto.graph.AttackGraphXml.class,
+				qesm.project.translator.scenario.dto.scenario.AttackScenarioXml.class
+			); }
 		catch (JAXBException e) { throw new ExceptionInInitializerError(e); }
 	}
 	

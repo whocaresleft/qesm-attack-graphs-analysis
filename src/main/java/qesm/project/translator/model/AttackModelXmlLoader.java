@@ -1,44 +1,34 @@
 package qesm.project.translator.model;
 
 import java.nio.file.Path;
-import java.util.List;
 
-import qesm.project.attack_graph.graph.AttackGraph;
-import qesm.project.attack_scenario.scenario.AttackScenario;
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
 import qesm.project.translator.exception.AttackLoadException;
-import qesm.project.translator.graph.AttackGraphMapper;
-import qesm.project.translator.model.dto.AttackModel;
+import qesm.project.translator.graph.AttackGraphXmlLoader;
 import qesm.project.translator.model.dto.AttackModelXml;
-import qesm.project.translator.scenario.AttackScenarioMapper;
-import qesm.project.translator.scenario.dto.scenario.AttackScenarioXml;
 import qesm.project.translator.utility.XmlHelper;
 
 public class AttackModelXmlLoader {
-	private final AttackGraphMapper graphMapper;
-	private final AttackScenarioMapper scenarioMapper;
 	
-	public AttackModelXmlLoader() {
-		this(new AttackGraphMapper(), new AttackScenarioMapper());
-	}
+	private static final Schema SCHEMA;
 	
-	public AttackModelXmlLoader(AttackGraphMapper graphMapper, AttackScenarioMapper scenarioMapper) {
-		this.graphMapper = graphMapper;
-		this.scenarioMapper = scenarioMapper;
-	}
-	
-	public AttackModel load(Path file) throws AttackLoadException {
-		Path abs = file.toAbsolutePath().normalize();
-		AttackModelXml modelXml = XmlHelper.unmarshal(abs, AttackModelXml.class);
+	static {
 		
-		for (AttackScenarioXml scenarioXml : modelXml.scenarios) {
-			if (scenarioXml.graph != null)
-                throw new AttackLoadException("Scenario '" + scenarioXml.name + "': <graph> is not allowed inside <attackModel>");
+		try {
+			
+			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SCHEMA = sf.newSchema(AttackGraphXmlLoader.class.getResource("/schemas/attackModel.xsd"));
+		} catch (Exception e) {
+			
+			throw new ExceptionInInitializerError("Could not find AttackModel Xml schema: " +  e.getMessage());
 		}
-		
-		AttackGraph graph = graphMapper.toAttackGraph(modelXml.graph);
-		List<AttackScenario> scenarios = modelXml.scenarios.stream()
-			.map(scenarioXml -> scenarioMapper.toAttackScenario(scenarioXml, graph)).toList();
+	}
 	
-		return new AttackModel(graph, scenarios);
+	public static AttackModelXml load(Path file) throws AttackLoadException {
+		Path abs = file.toAbsolutePath().normalize();
+		return XmlHelper.unmarshal(abs, AttackModelXml.class, SCHEMA);
 	}
 }

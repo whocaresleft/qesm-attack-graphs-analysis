@@ -1,6 +1,6 @@
 package qesm.project.translator.model.dto;
 
-import java.util.Set;
+import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -13,5 +13,5 @@ import qesm.project.translator.scenario.dto.scenario.AttackScenarioXml;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AttackModelXml {
 	@XmlElement(name = "attackGraph")    public AttackGraphXml graph;
-	@XmlElement(name = "attackScenario") public Set<AttackScenarioXml> scenarios;
+	@XmlElement(name = "attackScenario") public List<AttackScenarioXml> scenarios;
 }

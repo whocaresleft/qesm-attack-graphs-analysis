@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attackModel>
+  <attackScenario uuid="10000000-0000-0000-0000-000000000001" name="greedy-run"
+                  strategy="greedy" goalsRequired="ANY" timeBound="100.0">
+    <targets><goalRef ref="00000000-0000-0000-0000-0000000000e1"/></targets>
+    <failCondition type="anydetection"/>
+  </attackScenario>
+  <attackScenario uuid="10000000-0000-0000-0000-000000000002" name="cautious-run"
+                  strategy="cautious" goalsRequired="ALL" timeBound="200.0">
+    <targets><goalRef ref="00000000-0000-0000-0000-0000000000e1"/></targets>
+    <initialMarking><vertexRef ref="00000000-0000-0000-0000-0000000000a1"/></initialMarking>
+    <failCondition type="neverfail"/>
+  </attackScenario>
+</attackModel>
