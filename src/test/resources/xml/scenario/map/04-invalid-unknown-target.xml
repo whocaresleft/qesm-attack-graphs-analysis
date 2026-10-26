@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attackScenario uuid="20000000-0000-0000-0000-000000000001"
+                name="UnknownTarget"
+                strategy="greedy"
+                goalsRequired="ANY"
+                timeBound="100.0">
+    <graph file="sampleGraph.xml"/>
+    <targets>
+        <goalRef ref="00000000-0000-0000-0000-999999999999"/>
+    </targets>
+    <failCondition type="neverfail"/>
+</attackScenario>

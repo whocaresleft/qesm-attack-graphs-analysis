@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attackScenario uuid="10000000-0000-0000-0000-000000000003"
+                name="OtherStrategies"
+                strategy="low-hanging-fruit"
+                goalsRequired="ANY"
+                timeBound="50.0">
+    <graph file="sampleGraph.xml"/>
+    <targets>
+        <goalRef ref="00000000-0000-0000-0000-0000000000e1"/>
+    </targets>
+    <initialMarking>
+        <vertexRef ref="00000000-0000-0000-0000-0000000000a1"/>
+    </initialMarking>
+    <failCondition type="neverfail"/>
+</attackScenario>

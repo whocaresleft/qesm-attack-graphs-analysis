@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 import qesm.project.utility.Distribution;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -67,8 +67,8 @@ public class Step {
 	public double getFailureDetectedProbability() { return failureDetectedProbability; }
 	public Distribution getDuration() { return duration; }
 	public Distribution getDetectionTime() { return detectionTime; }
-	public Set<Outcome> getProduces() { return Collections.unmodifiableSet((Set<? extends Outcome>) produces.values()); }
-	public Set<Requirement> getRequires() { return Collections.unmodifiableSet((Set<? extends Requirement>)requires.values()); }
+	public Collection<Outcome> getProduces() { return Collections.unmodifiableCollection(produces.values()); }
+	public Collection<Requirement> getRequires() { return Collections.unmodifiableCollection(requires.values()); }
 	
 	@Override
 	public int hashCode() {

@@ -1,10 +1,10 @@
 package qesm.project.attack_scenario.scenario;
 
 import java.util.UUID;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import qesm.project.utility.GoalCombination;
 import qesm.project.attack_graph.vertex.Vertex;
 import qesm.project.attack_graph.graph.AttackGraph;
@@ -33,8 +33,8 @@ public class AttackScenario {
 	public GoalCombination getGoalsRequired() { return goalsRequired; }
 	public double getTimeBound() { return timeBound; }
 	public AttackGraph getGraph() { return graph; }
-	public Set<Vertex> getInitialMarking() { return Collections.unmodifiableSet((Set<? extends Vertex>) initialMarking.values()); }
-	public Set<Goal> getTargets() { return Collections.unmodifiableSet((Set<? extends Goal>)targets.values()); }
+	public Collection<Vertex> getInitialMarking() { return Collections.unmodifiableCollection(initialMarking.values()); }
+	public Collection<Goal> getTargets() { return Collections.unmodifiableCollection(targets.values()); }
 	public AttackStrategy getStrategy() { return strategy; }
 	public FailCondition getFailCondition() { return failCondition; }
 	

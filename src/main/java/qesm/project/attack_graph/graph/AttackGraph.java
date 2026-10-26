@@ -1,8 +1,8 @@
 package qesm.project.attack_graph.graph;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,8 +31,8 @@ public final class AttackGraph {
 	
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
-	public Set<Step> getSteps() { return steps.values().stream().collect(Collectors.toSet()); }
-	public Set<Vertex> getVertices() { return vertices.values().stream().collect(Collectors.toSet()); }
+	public Collection<Step> getSteps() { return Collections.unmodifiableCollection(steps.values()); }
+	public Collection<Vertex> getVertices() { return Collections.unmodifiableCollection(vertices.values()); }
 	
 	public Optional<Vertex> getVertexByUuid(UUID uuid) {
 		return Optional.ofNullable(vertices.get(uuid));

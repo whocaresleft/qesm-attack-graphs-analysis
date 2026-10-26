@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attackScenario uuid="10000000-0000-0000-0000-000000000002"
+                name="FullScenario"
+                strategy="cautious"
+                goalsRequired="ALL"
+                timeBound="3600.5">
+    <graph file="sampleGraph.xml"/>
+    <targets>
+        <goalRef ref="00000000-0000-0000-0000-0000000000e1"/>
+        <goalRef ref="00000000-0000-0000-0000-0000000000e2"/>
+    </targets>
+    <initialMarking>
+        <vertexRef ref="00000000-0000-0000-0000-0000000000a1"/>
+    </initialMarking>
+    <failCondition type="anydetection"/>
+</attackScenario>

@@ -1,0 +1,22 @@
+<attackGraph uuid="00000000-0000-0000-0000-000000000001" name="full">
+  <vertices>
+    <access uuid="00000000-0000-0000-0000-0000000000a1" name="A1"><detectionTime type="exponential" rate="0.05"/></access>
+    <access uuid="00000000-0000-0000-0000-0000000000a2" name="A2"><detectionTime type="exponential" rate="0.06"/></access>
+    <skill uuid="00000000-0000-0000-0000-0000000000c1" name="S1"/>
+    <knowledge uuid="00000000-0000-0000-0000-0000000000d1" name="K1"/>
+    <goal uuid="00000000-0000-0000-0000-0000000000e1" name="G1" value="10.5"><detectionTime type="exponential" rate="0.1"/></goal>
+    <goal uuid="00000000-0000-0000-0000-0000000000e2" name="G2" value="10.5"><detectionTime type="exponential" rate="0.1"/></goal>
+  </vertices>
+  <steps>
+    <step uuid="00000000-0000-0000-0000-000000000051" name="ST1"
+          successProbability="0.6" failureProbability="0.3" failureDetectedProbability="0.1">
+      <duration type="exponential" rate="1.0"/>
+      <detectionTime type="exponential" rate="0.1"/>
+      <requires ref="00000000-0000-0000-0000-0000000000a1"/>
+      <requires ref="00000000-0000-0000-0000-0000000000c1"/>
+      <requires ref="00000000-0000-0000-0000-0000000000d1"/>
+      <produces ref="00000000-0000-0000-0000-0000000000a2"/>
+      <produces ref="00000000-0000-0000-0000-0000000000e1"/>
+    </step>
+  </steps>
+</attackGraph>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attackScenario uuid="20000000-0000-0000-0000-000000000002"
+                name="TargetNotGoal"
+                strategy="greedy"
+                goalsRequired="ANY"
+                timeBound="100.0">
+    <graph file="sampleGraph.xml"/>
+    <targets>
+        <!-- UUID che nel grafo appartiene ad un Access e non a un Goal -->
+        <goalRef ref="00000000-0000-0000-0000-0000000000a1"/>
+    </targets>
+    <failCondition type="neverfail"/>
+</attackScenario>
