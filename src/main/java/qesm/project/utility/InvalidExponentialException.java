@@ -1,4 +1,4 @@
-package qesm.project.attack_graph.exception;
+package qesm.project.utility;
 
 public class InvalidExponentialException extends RuntimeException {
 	

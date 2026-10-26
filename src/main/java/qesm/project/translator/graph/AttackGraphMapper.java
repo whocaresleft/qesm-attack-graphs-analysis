@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import qesm.project.attack_graph.exception.CycleException;
-import qesm.project.attack_graph.exception.InvalidExponentialException;
 import qesm.project.attack_graph.exception.NegativeProbabilityException;
 import qesm.project.attack_graph.exception.OverallProbabilitiesOverOneException;
 import qesm.project.attack_graph.exception.OverallProbabilitiesUnderOneException;
@@ -17,6 +16,7 @@ import qesm.project.attack_graph.graph.AttackGraphBuilder;
 import qesm.project.attack_graph.step.Outcome;
 import qesm.project.attack_graph.step.Requirement;
 import qesm.project.attack_graph.step.Step;
+import qesm.project.attack_graph.step.StepBuilder;
 import qesm.project.attack_graph.vertex.Access;
 import qesm.project.attack_graph.vertex.Goal;
 import qesm.project.attack_graph.vertex.Knowledge;
@@ -33,6 +33,7 @@ import qesm.project.translator.utility.DistributionXml;
 import qesm.project.translator.utility.XmlHelper;
 import qesm.project.utility.Distribution;
 import qesm.project.utility.Exponential;
+import qesm.project.utility.InvalidExponentialException;
 import qesm.project.utility.NoneDistribution;
 
 public class AttackGraphMapper {
@@ -61,11 +62,11 @@ public class AttackGraphMapper {
         	try {
         		if (steps.put(XmlHelper.parseUuid(s.uuid), toStep(s, vertices)) != null)
         			throw new AttackMapException("Duplicate step with uuid " + s.uuid);
-        	} catch(InvalidExponentialException | NegativeProbabilityException | OverallProbabilitiesOverOneException | OverallProbabilitiesUnderOneException e) {
+        	} catch(IllegalArgumentException | InvalidExponentialException | NegativeProbabilityException | OverallProbabilitiesOverOneException | OverallProbabilitiesUnderOneException e) {
         		throw new AttackMapException("Step '" + s.name + "' is not valid: " + e.getMessage(), e);
         	}
 
-        AttackGraphBuilder graphBuilder =new AttackGraphBuilder()
+        AttackGraphBuilder graphBuilder = AttackGraphBuilder.create()
         		.withUuid(XmlHelper.parseUuid(xml.uuid))
         		.withName(xml.name)
         		.withSteps(steps.values().stream().collect(Collectors.toSet()))
@@ -89,42 +90,50 @@ public class AttackGraphMapper {
     }
     
     private static Distribution toDistribution(DistributionXml d) throws AttackMapException {
-        if (d == null) return NoneDistribution.get();
         return switch (d.type) {
-            case "exponential" -> Exponential.withRate(d.rate);
+            case "exponential" -> Exponential.fromRate(d.rate);
             default -> throw new AttackMapException("Unknown distribution: " + d.type);
         };
     }
     
+    private static Distribution toDetectionTime(DistributionXml d) throws AttackMapException {
+    	return d == null ? NoneDistribution.get() : toDistribution(d);
+    }
+    
+    private static Distribution toDuration(DistributionXml d) throws AttackMapException {
+        if (d == null) throw new AttackMapException("Duration is required");
+        return toDistribution(d);
+    }
+    
     private static Skill toSkill(SkillXml s) {
-    	return new Skill(XmlHelper.parseUuid(s.uuid), s.name); }
+    	return Skill.create(XmlHelper.parseUuid(s.uuid), s.name); }
     
     private static Knowledge toKnowledge(KnowledgeXml k) {
-    	return new Knowledge(XmlHelper.parseUuid(k.uuid), k.name);
+    	return Knowledge.create(XmlHelper.parseUuid(k.uuid), k.name);
     }
     
     private static Access toAccess(AccessXml a) {
-    	return new Access(XmlHelper.parseUuid(a.uuid), a.name, toDistribution(a.detectionTime));
+    	return Access.create(XmlHelper.parseUuid(a.uuid), a.name, toDetectionTime(a.detectionTime));
     }
     
     private static Goal toGoal(GoalXml g) {
-    	return new Goal(XmlHelper.parseUuid(g.uuid), g.name, g.value, toDistribution(g.detectionTime));
+    	return Goal.create(XmlHelper.parseUuid(g.uuid), g.name, g.value, toDetectionTime(g.detectionTime));
     }
     
-    private static Step toStep(StepXml s, Map<UUID, Vertex> vertices) throws InvalidExponentialException, NegativeProbabilityException, OverallProbabilitiesOverOneException, OverallProbabilitiesUnderOneException {
+    private static Step toStep(StepXml s, Map<UUID, Vertex> vertices) throws IllegalArgumentException, InvalidExponentialException, NegativeProbabilityException, OverallProbabilitiesOverOneException, OverallProbabilitiesUnderOneException {
     	Set<Requirement> requirements = s.requires.stream().map(r -> resolve(vertices, r.ref, Requirement.class, s)).collect(Collectors.toSet());
     	Set<Outcome> outcomes = s.produces.stream().map(r -> resolve(vertices, r.ref, Outcome.class, s)).collect(Collectors.toSet());
     	
-    	return new Step(
-    			XmlHelper.parseUuid(s.uuid),
-    			s.name,
-    			s.successProbability,
-    			s.failureProbability,
-    			s.failureDetectedProbability,
-    			toDistribution(s.duration),
-    			toDistribution(s.detectionTime),
-    			requirements,
-    			outcomes
-			);
+    	return StepBuilder.create()
+    			.withUuid(XmlHelper.parseUuid(s.uuid))
+    			.withName(s.name)
+    			.withSuccessProbability(s.successProbability)
+    			.withFailureProbability(s.failureProbability)
+    			.withFailureDetectedProbability(s.failureDetectedProbability)
+    			.withDuration(toDuration(s.duration))
+    			.withDetectionTime(toDetectionTime(s.detectionTime))
+    			.withRequirements(requirements)
+    			.withOutcomes(outcomes)
+				.build();
     }
 }

@@ -1,3 +1,5 @@
 package qesm.project.attack_graph.step;
 
-public interface Outcome { }
+import java.util.UUID;
+
+public interface Outcome { public UUID getUuid(); }

@@ -1,3 +1,5 @@
 package qesm.project.attack_graph.step;
 
-public interface Requirement { }
+import java.util.UUID;
+
+public interface Requirement { public UUID getUuid(); }

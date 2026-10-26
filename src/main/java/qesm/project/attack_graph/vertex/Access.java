@@ -11,9 +11,13 @@ public class Access extends Vertex implements Requirement, Outcome {
 	
 	private final Distribution detectionTime;
 	
-	public Access(UUID uuid, String name, Distribution detectionTime) {
+	private Access(UUID uuid, String name, Distribution detectionTime) {
 		super(uuid, name);
 		this.detectionTime = detectionTime;
+	}
+	
+	public static Access create(UUID uuid, String name, Distribution detectionTime) {
+		return new Access(uuid, name, detectionTime);
 	}
 	
 	public Distribution getDetectionTime() { return detectionTime; }

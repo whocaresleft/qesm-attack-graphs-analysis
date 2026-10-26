@@ -22,7 +22,17 @@ class StepTest {
 	private static double ONE_DOT_ONE    = 1.1;
 	
 	private static Step createStepFromProbabilities(double success, double failure, double failureDetected) {
-		return new Step(UUID.randomUUID(), "Step", success, failure, failureDetected, d, d, new HashSet<>(), new HashSet<>());
+		return StepBuilder.create()
+				.withUuid(UUID.randomUUID())
+				.withName("Step")
+				.withSuccessProbability(success)
+				.withFailureProbability(failure)
+				.withFailureDetectedProbability(failureDetected)
+				.withDuration(d)
+				.withDetectionTime(d)
+				.withRequirements(new HashSet<>())
+				.withOutcomes(new HashSet<>())
+				.build();
 	}
 	
 	@Test

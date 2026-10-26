@@ -1,7 +1,6 @@
 package qesm.project.attack_graph.graph;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -28,10 +27,17 @@ public final class AttackGraphBuilder {
 	private UUID uuid;
 	private String name;
 	
-	private Map<UUID, Step> steps;
-	private Map<UUID, Vertex> vertices;
+	private final Map<UUID, Step> steps;
+	private final Map<UUID, Vertex> vertices;
 	
-	public AttackGraphBuilder() {}
+	private AttackGraphBuilder() {
+		steps = new HashMap<>();
+		vertices = new HashMap<>();
+	}
+	
+	public static AttackGraphBuilder create() {
+		return new AttackGraphBuilder();
+	}
 	
 	public AttackGraphBuilder withUuid(UUID uuid) {
 		this.uuid = uuid;
@@ -44,27 +50,30 @@ public final class AttackGraphBuilder {
 	}
 	
 	public AttackGraphBuilder withSteps(Set<Step> steps) {
-		if (steps == null)
-			this.steps = Collections.emptyMap();
-		else
-			this.steps = steps.stream().collect(Collectors.toMap(Step::getUuid, step -> step));
+		this.steps.clear();
+		if (steps != null) steps.forEach(this::addStep);
 		return this;
 	}
 	
 	public AttackGraphBuilder withVertices(Set<Vertex> vertices) {
-		if (steps == null)
-			this.vertices = Collections.emptyMap();
-		else
-			this.vertices = vertices.stream().collect(Collectors.toMap(Vertex::getUuid, vertex -> vertex));
+		this.vertices.clear();
+		if (vertices != null) vertices.forEach(this::addVertex);
 		return this;
 	}
 	
 	public AttackGraphBuilder addVertex(Vertex vertex) {
-		vertices.put(vertex.getUuid(), vertex);
+		if (vertex != null) {
+			Vertex old = vertices.put(vertex.getUuid(), vertex);
+			if (old != null) vertices.put(vertex.getUuid(), old);
+		}
 		return this;
 	}
+	
 	public AttackGraphBuilder addStep(Step step) {
-		steps.put(step.getUuid(), step);
+		if (step != null) {
+			Step old = steps.put(step.getUuid(), step);
+			if (old != null) steps.put(step.getUuid(), old);
+		}
 		return this;
 	}
 	
@@ -72,32 +81,22 @@ public final class AttackGraphBuilder {
 		fixNulls();
 		validateStepsVertices();
 		validateAcyclic();
-		return new AttackGraph(uuid, name, steps, vertices);
+		return AttackGraph.create(uuid, name, steps, vertices);
+	}
+	
+	private Vertex getVertexByUuid(UUID vertexUuid) {
+		return vertices.get(vertexUuid);
 	}
 	
 	private void fixNulls() {
-		if (uuid == null)
-			withUuid(UUID.randomUUID());
-		if (name == null)
-			withName("Graph@" + uuid.toString());
+		if (uuid == null) withUuid(UUID.randomUUID());
+		if (name == null) withName("Graph@" + uuid.toString());
 	}
 	
 	private void validateStepsVertices() throws StepNotValidException {
 		for (Step step : steps.values()) {
-			if (!step
-				.getProduces()
-				.stream()
-				.filter(outcome -> !vertices.containsValue((Vertex)outcome))
-				.toList()
-				.isEmpty()
-			) { throw new StepNotValidException(step); }
-			if (!step
-				.getRequires()
-				.stream()
-				.filter(requirement -> !vertices.containsValue((Vertex)requirement))
-				.toList()
-				.isEmpty()
-			) { throw new StepNotValidException(step); }
+			if (step.getProduces().stream().anyMatch(o -> getVertexByUuid(o.getUuid()) == null) || step.getRequires().stream().anyMatch(r -> getVertexByUuid(r.getUuid()) == null))
+				throw new StepNotValidException(step);
 		}
 	}
 	

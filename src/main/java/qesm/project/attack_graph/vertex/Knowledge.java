@@ -6,7 +6,11 @@ import qesm.project.attack_graph.step.Requirement;
 
 public class Knowledge extends Vertex implements Requirement {
 
-	public Knowledge(UUID uuid, String name) {
+	private Knowledge(UUID uuid, String name) {
 		super(uuid, name);
+	}
+	
+	public static Knowledge create(UUID uuid, String name) {
+		return new Knowledge(uuid, name);
 	}
 }

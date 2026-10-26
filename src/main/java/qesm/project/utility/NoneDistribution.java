@@ -1,6 +1,6 @@
 package qesm.project.utility;
 
-public class NoneDistribution extends Distribution {
+public final class NoneDistribution implements Distribution {
 	
 	private static final NoneDistribution INSTANCE = new NoneDistribution();
 	
@@ -9,6 +9,10 @@ public class NoneDistribution extends Distribution {
 	public static NoneDistribution get() {
 		return INSTANCE;
 	}
+	
+	public double mean() { return Double.POSITIVE_INFINITY; }
+	
+	public double cfd(double _t) { return 0.0; }
 	
 	@Override
 	public int hashCode() {

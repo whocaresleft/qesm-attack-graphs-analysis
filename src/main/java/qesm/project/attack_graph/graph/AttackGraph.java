@@ -18,11 +18,15 @@ public final class AttackGraph {
 	private final Map<UUID, Step> steps;
 	private final Map<UUID, Vertex> vertices;
 	
-	AttackGraph(UUID uuid, String name, Map<UUID, Step> steps, Map<UUID, Vertex> vertices) {
+	private AttackGraph(UUID uuid, String name, Map<UUID, Step> steps, Map<UUID, Vertex> vertices) {
 		this.uuid = uuid;
 		this.name = name;
 		this.steps = steps;
 		this.vertices = vertices;
+	}
+	
+	static AttackGraph create(UUID uuid, String name, Map<UUID, Step> steps, Map<UUID, Vertex> vertices) {
+		return new AttackGraph(uuid, name, steps, vertices);
 	}
 	
 	public UUID getUuid() { return uuid; }

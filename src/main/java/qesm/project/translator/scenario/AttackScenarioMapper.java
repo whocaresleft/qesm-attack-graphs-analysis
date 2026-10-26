@@ -10,6 +10,7 @@ import qesm.project.attack_scenario.fail_condition.AnyDetection;
 import qesm.project.attack_scenario.fail_condition.FailCondition;
 import qesm.project.attack_scenario.fail_condition.NeverFail;
 import qesm.project.attack_scenario.scenario.AttackScenario;
+import qesm.project.attack_scenario.scenario.AttackScenarioBuilder;
 import qesm.project.attack_scenario.strategy.AttackStrategy;
 import qesm.project.attack_scenario.strategy.Cautious;
 import qesm.project.attack_scenario.strategy.Greedy;
@@ -27,17 +28,22 @@ public class AttackScenarioMapper {
         Set<Vertex> initialMarking = xml.initialMarking.stream().map(r -> graph.getVertexByUuid(XmlHelper.parseUuid(r.ref))
                 .orElseThrow(() -> new AttackMapException("Scenario '" + xml.name + "': vertex unknown " + r.ref))).collect(Collectors.toSet());
         
-        return new AttackScenario(
-        		XmlHelper.parseUuid(xml.uuid),
-        		xml.name,
-        		graph,
-        		initialMarking,
-        		targets,
-        		toGoalCombination(xml.goalsRequired),
-        		toAttackStrategy(xml.strategy),
-        		xml.timeBound,
-        		toFailCondition(xml.failCondition)
-    		);
+        AttackScenarioBuilder scenarioBuilder = AttackScenarioBuilder.create()
+        		.withUuid(XmlHelper.parseUuid(xml.uuid))
+        		.withName(xml.name)
+        		.withGraph(graph)
+        		.withInitialMarking(initialMarking)
+        		.withTargets(targets)
+        		.withGoalCombination(toGoalCombination(xml.goalsRequired))
+        		.withStrategy(toAttackStrategy(xml.strategy))
+        		.withTimeBound(xml.timeBound)
+        		.withFailCondition(toFailCondition(xml.failCondition));
+        		
+        try {
+        	return scenarioBuilder.build();
+    	} catch(IllegalArgumentException e) {
+    		throw new AttackMapException(e.getMessage(), e);
+    	}
     }
     
     private static Goal findGoal(AttackGraph graph, String ref, String scenario) {

@@ -2,14 +2,11 @@ package qesm.project.attack_graph.step;
 
 import java.util.Objects;
 import java.util.UUID;
-
-import qesm.project.attack_graph.exception.NegativeProbabilityException;
-import qesm.project.attack_graph.exception.OverallProbabilitiesOverOneException;
-import qesm.project.attack_graph.exception.OverallProbabilitiesUnderOneException;
 import qesm.project.utility.Distribution;
 
 import java.util.Set;
 import java.util.Collections;
+import java.util.Map;
 
 public class Step {
 
@@ -23,10 +20,10 @@ public class Step {
 	private final Distribution duration;
 	private final Distribution detectionTime;
 	
-	private final Set<Requirement> requires;
-	private final Set<Outcome> produces;
+	private final Map<UUID, Requirement> requires;
+	private final Map<UUID, Outcome> produces;
 	
-	public Step(
+	private Step(
 		UUID uuid,
 		String name,
 		double successProbability,
@@ -34,8 +31,8 @@ public class Step {
 		double failureDetectedProbability,
 		Distribution duration,
 		Distribution detectionTime,
-		Set<Requirement> requires,
-		Set<Outcome> produces
+		Map<UUID, Requirement> requires,
+		Map<UUID, Outcome> produces
 	) {
 		this.uuid = uuid;
 		this.name = name;
@@ -46,10 +43,23 @@ public class Step {
 		this.detectionTime = detectionTime;
 		this.requires = requires;
 		this.produces = produces;
-		
-		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
 	}
 
+	static Step create(
+		UUID uuid,
+		String name,
+		double successProbability,
+		double failureProbability,
+		double failureDetectedProbability,
+		Distribution duration,
+		Distribution detectionTime,
+		Map<UUID, Requirement> requires,
+		Map<UUID, Outcome> produces
+	)
+	{
+		return new Step(uuid, name, successProbability, failureProbability, failureDetectedProbability, duration, detectionTime, requires, produces);
+	}
+	
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
 	public double getSuccessProbability() { return successProbability; }
@@ -57,20 +67,8 @@ public class Step {
 	public double getFailureDetectedProbability() { return failureDetectedProbability; }
 	public Distribution getDuration() { return duration; }
 	public Distribution getDetectionTime() { return detectionTime; }
-	public Set<Outcome> getProduces() { return Collections.unmodifiableSet(produces); }
-	public Set<Requirement> getRequires() { return Collections.unmodifiableSet(requires); }
-	
-	private static void validateProbabilities(double p1, double p2, double p3) throws NegativeProbabilityException, OverallProbabilitiesOverOneException, OverallProbabilitiesUnderOneException {
-		if (p1 < 0) throw new NegativeProbabilityException(p1);
-		if (p2 < 0) throw new NegativeProbabilityException(p2);
-		if (p3 < 0) throw new NegativeProbabilityException(p3);
-		
-		double sum = p1 + p2 + p3;
-		double epsilon = 1e-6;
-		
-		if (sum > 1.0 + epsilon) throw new OverallProbabilitiesOverOneException(sum);
-		if (sum < 1.0 - epsilon) throw new OverallProbabilitiesUnderOneException(sum);
-	}
+	public Set<Outcome> getProduces() { return Collections.unmodifiableSet((Set<? extends Outcome>) produces.values()); }
+	public Set<Requirement> getRequires() { return Collections.unmodifiableSet((Set<? extends Requirement>)requires.values()); }
 	
 	@Override
 	public int hashCode() {

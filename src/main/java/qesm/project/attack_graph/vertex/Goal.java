@@ -12,12 +12,16 @@ public class Goal extends Vertex implements Requirement, Outcome {
 	private final double value;
 	private final Distribution detectionTime;
 	
-	public Goal(UUID uuid, String name, double value, Distribution detectionTime) {
+	private Goal(UUID uuid, String name, double value, Distribution detectionTime) {
 		super(uuid, name);
 		this.value = value;
 		this.detectionTime = detectionTime;
 	}
 
+	public static Goal create(UUID uuid, String name, double value, Distribution detectionTime) {
+		return new Goal(uuid, name, value, detectionTime);
+	}
+	
 	public double getValue() { return value; }
 	public Distribution getDetectionTime() { return detectionTime; }
 	

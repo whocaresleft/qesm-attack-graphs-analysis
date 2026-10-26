@@ -2,6 +2,7 @@ package qesm.project.attack_scenario.scenario;
 
 import java.util.UUID;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import qesm.project.utility.GoalCombination;
@@ -20,8 +21,8 @@ public class AttackScenario {
 	private final double timeBound;
 	
 	private final AttackGraph graph;
-	private final Set<Vertex> initialMarking;
-	private final Set<Goal> targets;
+	private final Map<UUID, Vertex> initialMarking;
+	private final Map<UUID, Goal> targets;
 	
 	private final AttackStrategy strategy;
 
@@ -32,26 +33,26 @@ public class AttackScenario {
 	public GoalCombination getGoalsRequired() { return goalsRequired; }
 	public double getTimeBound() { return timeBound; }
 	public AttackGraph getGraph() { return graph; }
-	public Set<Vertex> getInitialMarking() { return Collections.unmodifiableSet(initialMarking); }
-	public Set<Goal> getTargets() { return Collections.unmodifiableSet(targets); }
+	public Set<Vertex> getInitialMarking() { return Collections.unmodifiableSet((Set<? extends Vertex>) initialMarking.values()); }
+	public Set<Goal> getTargets() { return Collections.unmodifiableSet((Set<? extends Goal>)targets.values()); }
 	public AttackStrategy getStrategy() { return strategy; }
 	public FailCondition getFailCondition() { return failCondition; }
 	
-	public AttackScenario(UUID uuid, String name, AttackGraph graph, Set<Vertex> initialMarking, Set<Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, double timeBound, FailCondition failCondition) {
+	private AttackScenario(UUID uuid, String name, AttackGraph graph, Map<UUID, Vertex> initialMarking, Map<UUID, Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, double timeBound, FailCondition failCondition) {
 		this.uuid = uuid;
 		this.name = name;
 		this.graph = graph;
 		this.initialMarking = initialMarking;
-		if (targets.isEmpty()) throw new IllegalArgumentException("Must contain at least 1 target");
 		this.targets = targets;
 		this.goalsRequired = goalsRequired;
 		this.strategy = strategy;
-		if (!(timeBound > 0.0) || Double.isInfinite(timeBound)) throw new IllegalArgumentException("Illegal duration, must be positive and finite: " + timeBound);
 		this.timeBound = timeBound;
 		this.failCondition = failCondition;
 	}
 	
-	
+	static AttackScenario create(UUID uuid, String name, AttackGraph graph, Map<UUID, Vertex> initialMarking, Map<UUID, Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, double timeBound, FailCondition failCondition) {
+		return new AttackScenario(uuid, name, graph, initialMarking, targets, goalsRequired, strategy, timeBound, failCondition);
+	}
 	@Override
 	public String toString() {
 		return "AttackScenario [uuid=" + uuid + ", name=" + name + ", goalsRequired=" + goalsRequired + ", timeBound="

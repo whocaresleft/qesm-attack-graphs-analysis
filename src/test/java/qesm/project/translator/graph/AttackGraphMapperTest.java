@@ -18,6 +18,7 @@ import qesm.project.attack_graph.graph.AttackGraph;
 import qesm.project.attack_graph.step.Outcome;
 import qesm.project.attack_graph.step.Requirement;
 import qesm.project.attack_graph.step.Step;
+import qesm.project.attack_graph.step.StepBuilder;
 import qesm.project.attack_graph.vertex.Access;
 import qesm.project.attack_graph.vertex.Goal;
 import qesm.project.attack_graph.vertex.Knowledge;
@@ -222,13 +223,27 @@ class AttackGraphMapperTest {
 				assertThat(goal.getValue()).isBetween(1.0 - EPSILON, 1.0 + EPSILON);
 				assertThat(goal.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected1 = new Step(
-					UUID.fromString("00000000-0000-0000-0000-000000000051"), "ST1", 0.8, 0.1, 0.1,
-					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access1), Set.of((Outcome)access2));
+				Step expected1 = StepBuilder.create()
+						.withUuid(UUID.fromString("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.8)
+						.withFailureProbability(0.1)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access1))
+						.withOutcomes(Set.of((Outcome)access2))
+						.build();
 				
-				Step expected2 = new Step(
-					UUID.fromString("00000000-0000-0000-0000-000000000052"), "ST2", 0.5, 0.4, 0.1,
-					Exponential.withRate(2.0), NoneDistribution.get(), Set.of((Requirement)access2), Set.of((Outcome)goal));
+				Step expected2 = StepBuilder.create()
+						.withUuid(UUID.fromString("00000000-0000-0000-0000-000000000052"))
+						.withName("ST2")
+						.withSuccessProbability(0.5)
+						.withFailureProbability(0.4)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(2.0))
+						.withRequirements(Set.of((Requirement)access2))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
 				
 				assertThat(graph.getSteps()).containsExactlyInAnyOrder(expected1, expected2);
 			}
@@ -270,13 +285,26 @@ class AttackGraphMapperTest {
 				assertThat(skill.getUuid()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-0000000000c1"));
 				assertThat(skill.getName()).isEqualTo("S1");
 				
-				Step expected1 = new Step(
-					UUID.fromString("00000000-0000-0000-0000-000000000051"), "ST1", 0.5, 0.4, 0.1,
-					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
-					
-				Step expected2 = new Step(
-					UUID.fromString("00000000-0000-0000-0000-000000000052"), "ST2", 0.9, 0.0, 0.1,
-					Exponential.withRate(0.2), NoneDistribution.get(), Set.of((Requirement)skill), Set.of((Outcome)goal));
+				Step expected1 = StepBuilder.create()
+						.withUuid(UUID.fromString("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.5)
+						.withFailureProbability(0.4)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
+				
+				Step expected2 = StepBuilder.create()
+						.withUuid(UUID.fromString("00000000-0000-0000-0000-000000000052"))
+						.withName("ST2")
+						.withSuccessProbability(0.9)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(0.2))
+						.withRequirements(Set.of((Requirement)skill))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
 					
 				assertThat(graph.getSteps()).containsExactlyInAnyOrder(expected1, expected2);
 			}
@@ -310,9 +338,14 @@ class AttackGraphMapperTest {
 				assertThat(goal.getValue()).isBetween(0.0 - EPSILON, 0.0 + EPSILON);
 				assertThat(goal.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-					UUID.fromString("00000000-0000-0000-0000-000000000051"), "ST1", 1.0, 0.0, 0.0,
-					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
+				Step expected = StepBuilder.create()
+						.withUuid(UUID.fromString("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(1.0)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -346,9 +379,16 @@ class AttackGraphMapperTest {
 				assertThat(goal.getValue()).isBetween(1.0 - EPSILON, 1.0 + EPSILON);
 				assertThat(goal.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
+				Step expected = StepBuilder.create()
+						.withUuid(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.7)
+						.withFailureProbability(0.2)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -373,9 +413,15 @@ class AttackGraphMapperTest {
 				assertThat(goal.getValue()).isBetween(10.0 - EPSILON, 10.0 + EPSILON);
 				assertThat(goal.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-					Exponential.withRate(1.0), NoneDistribution.get(), Set.of(), Set.of((Outcome)goal));
+				Step expected = StepBuilder.create()
+						.withUuid(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.7)
+						.withFailureProbability(0.2)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -399,9 +445,15 @@ class AttackGraphMapperTest {
 				assertThat(access.getName()).isEqualTo("A1");
 				assertThat(access.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of());
+				Step expected = StepBuilder.create()
+						.withUuid(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.7)
+						.withFailureProbability(0.2)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access))
+						.build();
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -484,9 +536,16 @@ class AttackGraphMapperTest {
 				assertThat(goal2.getValue()).isBetween(3.0 - EPSILON, 3.0 + EPSILON);
 				assertThat(goal2.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-						Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal1));
+				Step expected = StepBuilder.create()
+						.withUuid(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.7)
+						.withFailureProbability(0.2)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access))
+						.withOutcomes(Set.of((Outcome)goal1))
+						.build();
 				
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -531,10 +590,17 @@ class AttackGraphMapperTest {
 				assertThat(goal.getValue()).isBetween(10.0 - EPSILON, 10.0 + EPSILON);
 				assertThat(goal.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-						Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access2), Set.of((Outcome)goal));
-				
+				Step expected = StepBuilder.create()
+						.withUuid(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"))
+						.withName("ST1")
+						.withSuccessProbability(0.7)
+						.withFailureProbability(0.2)
+						.withFailureDetectedProbability(0.1)
+						.withDuration(Exponential.fromRate(1.0))
+						.withRequirements(Set.of((Requirement)access2))
+						.withOutcomes(Set.of((Outcome)goal))
+						.build();
+	
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
 			
@@ -578,9 +644,16 @@ class AttackGraphMapperTest {
 				assertThat(goal.getValue()).isBetween(10.0 - EPSILON, 10.0 + EPSILON);
 				assertThat(goal.getDetectionTime()).isExactlyInstanceOf(NoneDistribution.class);
 				
-				Step expected = new Step(
-						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-						Exponential.withRate(1.0), NoneDistribution.get(), Set.of(access1, access2), Set.of(goal));
+				Step expected = StepBuilder.create()
+					.withUuid(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"))
+					.withName("ST1")
+					.withSuccessProbability(0.7)
+					.withFailureProbability(0.2)
+					.withFailureDetectedProbability(0.1)
+					.withDuration(Exponential.fromRate(1.0))
+					.withRequirements(Set.of(access1, access2))
+					.withOutcomes(Set.of(goal))
+					.build();
 				
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
