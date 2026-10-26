@@ -39,7 +39,7 @@ class XmlHelperTest {
 	void testUnmarshalWithInvalidXmlThrows() {
 		assertThatExceptionOfType(AttackLoadException.class)
 			.isThrownBy(() -> XmlHelper.unmarshal(resource("invalid-xml.xml"), AttackGraphXml.class))
-			.withMessage("XML is not valid: invalid-xml.xml");
+			.withMessage("Error while loading: XML is not valid: invalid-xml.xml");
 	}
 	
 	private static Path resource(String name) {

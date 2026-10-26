@@ -91,7 +91,7 @@ public class AttackGraphMapper {
     private static Distribution toDistribution(DistributionXml d) throws AttackMapException {
         if (d == null) return NoneDistribution.get();
         return switch (d.type) {
-            case "exponential" -> new Exponential(d.rate);
+            case "exponential" -> Exponential.withRate(d.rate);
             default -> throw new AttackMapException("Unknown distribution: " + d.type);
         };
     }

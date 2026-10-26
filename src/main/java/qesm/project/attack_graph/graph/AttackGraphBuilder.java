@@ -21,7 +21,7 @@ import qesm.project.attack_graph.step.Requirement;
 import qesm.project.attack_graph.step.Step;
 import qesm.project.attack_graph.vertex.Vertex;
 
-public class AttackGraphBuilder {
+public final class AttackGraphBuilder {
 	
 	private enum State {UNVISITED, VISITING, VISITED};
 	

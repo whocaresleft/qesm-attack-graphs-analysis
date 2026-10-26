@@ -13,18 +13,18 @@ import java.util.Collections;
 
 public class Step {
 
-	private UUID uuid;
-	private String name;
+	private final UUID uuid;
+	private final String name;
 	
-	private double successProbability;
-	private double failureProbability;
-	private double failureDetectedProbability;
+	private final double successProbability;
+	private final double failureProbability;
+	private final double failureDetectedProbability;
 	
-	private Distribution duration;
-	private Distribution detectionTime;
+	private final Distribution duration;
+	private final Distribution detectionTime;
 	
-	private Set<Requirement> requires;
-	private Set<Outcome> produces;
+	private final Set<Requirement> requires;
+	private final Set<Outcome> produces;
 	
 	public Step(
 		UUID uuid,
@@ -37,15 +37,15 @@ public class Step {
 		Set<Requirement> requires,
 		Set<Outcome> produces
 	) {
-		setUuid(uuid);
-		setName(name);
+		this.uuid = uuid;
+		this.name = name;
 		this.successProbability = successProbability;
 		this.failureProbability = failureProbability;
 		this.failureDetectedProbability = failureDetectedProbability;
-		setDuration(duration);
-		setDetectionTime(detectionTime);
-		setRequires(requires);
-		setProduces(produces);
+		this.duration = duration;
+		this.detectionTime = detectionTime;
+		this.requires = requires;
+		this.produces = produces;
 		
 		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
 	}
@@ -60,25 +60,6 @@ public class Step {
 	public Set<Outcome> getProduces() { return Collections.unmodifiableSet(produces); }
 	public Set<Requirement> getRequires() { return Collections.unmodifiableSet(requires); }
 	
-	private void setUuid(UUID uuid) { this.uuid = uuid; }
-	private void setName(String name) { this.name = name; }
-	public void setSuccessProbability(double successProbability) {
-		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
-		this.successProbability = successProbability;
-	}
-	public void setFailureProbability(double failureProbability) {
-		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
-		this.failureProbability = failureProbability;
-	}
-	public void setFailureDetectedProbability(double failureDetectedProbability) {
-		validateProbabilities(successProbability, failureProbability, failureDetectedProbability);
-		this.failureDetectedProbability = failureDetectedProbability;
-	}
-	public void setDuration(Distribution duration) { this.duration = duration; }
-	public void setDetectionTime(Distribution detectionTime) { this.detectionTime = detectionTime; }
-	public void setRequires(Set<Requirement> requires) { this.requires = requires; }
-	public void setProduces(Set<Outcome> produces) { this.produces = produces; }
-	
 	private static void validateProbabilities(double p1, double p2, double p3) throws NegativeProbabilityException, OverallProbabilitiesOverOneException, OverallProbabilitiesUnderOneException {
 		if (p1 < 0) throw new NegativeProbabilityException(p1);
 		if (p2 < 0) throw new NegativeProbabilityException(p2);
@@ -90,9 +71,6 @@ public class Step {
 		if (sum > 1.0 + epsilon) throw new OverallProbabilitiesOverOneException(sum);
 		if (sum < 1.0 - epsilon) throw new OverallProbabilitiesUnderOneException(sum);
 	}
-	
-	public void addRequirement(Requirement r) { if (!requires.contains(r)) requires.add(r); }
-	public void addOutcome(Outcome o) { if (!produces.contains(o)) produces.add(o); }
 	
 	@Override
 	public int hashCode() {

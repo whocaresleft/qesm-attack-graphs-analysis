@@ -7,7 +7,7 @@ import qesm.project.attack_graph.step.Step;
 
 public class CycleException extends RuntimeException {
 	
-	private Collection<Step> cycle;
+	private final Collection<Step> cycle;
 
 	private static final long serialVersionUID = -8833367851904945633L;
 	

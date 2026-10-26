@@ -5,18 +5,18 @@ import java.util.Objects;
 import qesm.project.attack_graph.exception.InvalidExponentialException;
 
 public class Exponential extends Distribution {
-	private double rate;
+	private final double rate;
 	
-	public Exponential(double rate) {
-		setRate(rate);
-	}
-
-	public double getRate() { return rate; }
-
-	private void setRate(double rate) {
-		if (rate <= 0) throw new InvalidExponentialException(rate);
+	private Exponential(double rate) {
 		this.rate = rate;
 	}
+
+	public static Exponential withRate(double rate) throws InvalidExponentialException {
+		if (rate <= 0) throw new InvalidExponentialException(rate);
+		return new Exponential(rate);
+	}
+	
+	public double getRate() { return rate; }
 
 	@Override
 	public int hashCode() {

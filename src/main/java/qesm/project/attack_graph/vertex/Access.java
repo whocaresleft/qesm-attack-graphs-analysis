@@ -9,16 +9,14 @@ import qesm.project.utility.Distribution;
 
 public class Access extends Vertex implements Requirement, Outcome {
 	
-	private Distribution detectionTime;
+	private final Distribution detectionTime;
 	
 	public Access(UUID uuid, String name, Distribution detectionTime) {
 		super(uuid, name);
-		setDetectionTime(detectionTime);
+		this.detectionTime = detectionTime;
 	}
 	
 	public Distribution getDetectionTime() { return detectionTime; }
-
-	private void setDetectionTime(Distribution detectionTime) { this.detectionTime = detectionTime; }
 
 	@Override
 	public int hashCode() {

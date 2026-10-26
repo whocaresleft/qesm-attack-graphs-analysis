@@ -224,11 +224,11 @@ class AttackGraphMapperTest {
 				
 				Step expected1 = new Step(
 					UUID.fromString("00000000-0000-0000-0000-000000000051"), "ST1", 0.8, 0.1, 0.1,
-					new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access1), Set.of((Outcome)access2));
+					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access1), Set.of((Outcome)access2));
 				
 				Step expected2 = new Step(
 					UUID.fromString("00000000-0000-0000-0000-000000000052"), "ST2", 0.5, 0.4, 0.1,
-					new Exponential(2.0), NoneDistribution.get(), Set.of((Requirement)access2), Set.of((Outcome)goal));
+					Exponential.withRate(2.0), NoneDistribution.get(), Set.of((Requirement)access2), Set.of((Outcome)goal));
 				
 				assertThat(graph.getSteps()).containsExactlyInAnyOrder(expected1, expected2);
 			}
@@ -272,11 +272,11 @@ class AttackGraphMapperTest {
 				
 				Step expected1 = new Step(
 					UUID.fromString("00000000-0000-0000-0000-000000000051"), "ST1", 0.5, 0.4, 0.1,
-					new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
+					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
 					
 				Step expected2 = new Step(
 					UUID.fromString("00000000-0000-0000-0000-000000000052"), "ST2", 0.9, 0.0, 0.1,
-					new Exponential(0.2), NoneDistribution.get(), Set.of((Requirement)skill), Set.of((Outcome)goal));
+					Exponential.withRate(0.2), NoneDistribution.get(), Set.of((Requirement)skill), Set.of((Outcome)goal));
 					
 				assertThat(graph.getSteps()).containsExactlyInAnyOrder(expected1, expected2);
 			}
@@ -312,7 +312,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 					UUID.fromString("00000000-0000-0000-0000-000000000051"), "ST1", 1.0, 0.0, 0.0,
-					new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
+					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -348,7 +348,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-					new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
+					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal));
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -375,7 +375,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-					new Exponential(1.0), NoneDistribution.get(), Set.of(), Set.of((Outcome)goal));
+					Exponential.withRate(1.0), NoneDistribution.get(), Set.of(), Set.of((Outcome)goal));
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -401,7 +401,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-					new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of());
+					Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of());
 					
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -486,7 +486,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-						new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal1));
+						Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access), Set.of((Outcome)goal1));
 				
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -533,7 +533,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-						new Exponential(1.0), NoneDistribution.get(), Set.of((Requirement)access2), Set.of((Outcome)goal));
+						Exponential.withRate(1.0), NoneDistribution.get(), Set.of((Requirement)access2), Set.of((Outcome)goal));
 				
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}
@@ -580,7 +580,7 @@ class AttackGraphMapperTest {
 				
 				Step expected = new Step(
 						XmlHelper.parseUuid("00000000-0000-0000-0000-000000000051"), "ST1", 0.7, 0.2, 0.1,
-						new Exponential(1.0), NoneDistribution.get(), Set.of(access1, access2), Set.of(goal));
+						Exponential.withRate(1.0), NoneDistribution.get(), Set.of(access1, access2), Set.of(goal));
 				
 				assertThat(graph.getSteps()).containsExactly(expected);
 			}

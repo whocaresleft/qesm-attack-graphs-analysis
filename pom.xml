@@ -8,8 +8,6 @@
   <version>0.0.1-SNAPSHOT</version>
 
   <name>attack-graph-analysis</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -163,13 +161,6 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven.surefire.version}</version>
-          <configuration>
-            <argLine>
-              @{argLine}
-              --add-opens java.base/java.util=ALL-UNNAMED
-              --add-opens java.desktop/java.awt=ALL-UNNAMED
-            </argLine>
-          </configuration>
         </plugin>
         
         <plugin>

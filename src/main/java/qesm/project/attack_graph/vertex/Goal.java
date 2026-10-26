@@ -9,17 +9,14 @@ import qesm.project.utility.Distribution;
 
 public class Goal extends Vertex implements Requirement, Outcome {
 
-	private double value;
-	private Distribution detectionTime;
+	private final double value;
+	private final Distribution detectionTime;
 	
 	public Goal(UUID uuid, String name, double value, Distribution detectionTime) {
 		super(uuid, name);
-		setValue(value);
-		setDetectionTime(detectionTime);
+		this.value = value;
+		this.detectionTime = detectionTime;
 	}
-
-	private void setValue(double value) { this.value = value; }
-	private void setDetectionTime(Distribution detectionTime) { this.detectionTime = detectionTime; }
 
 	public double getValue() { return value; }
 	public Distribution getDetectionTime() { return detectionTime; }
