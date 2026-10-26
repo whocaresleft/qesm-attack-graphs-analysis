@@ -12,28 +12,23 @@ import qesm.project.attack_graph.vertex.Vertex;
 
 public final class AttackGraph {
 	
-	private UUID uuid;
-	private String name;
+	private final UUID uuid;
+	private final String name;
 	
-	private Map<UUID, Step> steps;
-	private Map<UUID, Vertex> vertices;
+	private final Map<UUID, Step> steps;
+	private final Map<UUID, Vertex> vertices;
 	
 	AttackGraph(UUID uuid, String name, Map<UUID, Step> steps, Map<UUID, Vertex> vertices) {
-		setUuid(uuid);
-		setName(name);
-		setSteps(steps);
-		setVertices(vertices);
+		this.uuid = uuid;
+		this.name = name;
+		this.steps = steps;
+		this.vertices = vertices;
 	}
 	
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
 	public Set<Step> getSteps() { return steps.values().stream().collect(Collectors.toSet()); }
 	public Set<Vertex> getVertices() { return vertices.values().stream().collect(Collectors.toSet()); }
-	
-	private void setUuid(UUID uuid) { this.uuid = uuid; }
-	private void setName(String name) { this.name = name; }
-	private void setSteps(Map<UUID ,Step> steps) { this.steps = steps; }
-	private void setVertices(Map<UUID, Vertex> vertices) { this.vertices = vertices; }
 	
 	public Optional<Vertex> getVertexByUuid(UUID uuid) {
 		return Optional.ofNullable(vertices.get(uuid));

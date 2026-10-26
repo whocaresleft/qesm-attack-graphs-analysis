@@ -1,57 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <!--AttackScenarioXml-->
+    <!-- AttackScenario -->
     <xs:element name="attackScenario">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="graph" type="GraphRefType" minOccurs="1"/>
-                <xs:element name="targets" type="TargetsWrapperType" minOccurs="0"/>
-                <xs:element name="initialMarking" type="InitialMarkingWrapperType" minOccurs="0"/>
-                <xs:element name="failConditions" type="FailConditionsWrapperType" minOccurs="0"/>
+                <!-- UML: -graph 1 -->
+                <xs:element name="graph" type="GraphRefType"/>
+                <!-- UML: -targets 1..* -->
+                <xs:element name="targets" type="TargetsType"/>
+                <!-- UML: -initialMarking 0..* -->
+                <xs:element name="initialMarking" type="InitialMarkingType" minOccurs="0"/>
+                <!-- UML: -failConditions 1..* -->
+                <xs:element name="failCondition" type="FailConditionType"/>
             </xs:sequence>
-            <xs:attribute name="uuid" type="xs:string" use="required"/>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="strategy" type="xs:string" use="required"/>
-            <xs:attribute name="goalsRequired" type="xs:string" use="optional"/>
-            <xs:attribute name="timeBound" type="xs:double" use="optional"/>
+            <xs:attribute name="uuid"          type="UuidType"            use="required"/>
+            <xs:attribute name="name"          type="NameType"            use="required"/>
+            <xs:attribute name="strategy"      type="StrategyType"        use="required"/>
+            <xs:attribute name="goalsRequired" type="GoalCombinationType" use="required"/>
+            <xs:attribute name="timeBound"     type="TimeBoundType"       use="required"/>
         </xs:complexType>
+
+        <!-- niente duplicati in targets e initialMarking -->
+        <xs:unique name="uniqueTarget">
+            <xs:selector xpath="targets/goalRef"/>
+            <xs:field xpath="@ref"/>
+        </xs:unique>
+        <xs:unique name="uniqueMarking">
+            <xs:selector xpath="initialMarking/vertexRef"/>
+            <xs:field xpath="@ref"/>
+        </xs:unique>
     </xs:element>
 
-    <!--GraphRefXml-->
+    <!-- Riferimento al grafo: solo file -->
     <xs:complexType name="GraphRefType">
-        <xs:attribute name="ref" type="xs:string" use="optional"/>
-        <xs:attribute name="file" type="xs:string" use="optional"/>
+        <xs:attribute name="file" type="NameType" use="required"/>
     </xs:complexType>
 
-    <!--Wrapper List types-->
-    <xs:complexType name="TargetsWrapperType">
+    <!-- Liste -->
+    <xs:complexType name="TargetsType">
         <xs:sequence>
-            <!--Mapped from @XmlElement(name = "goalRef")-->
-            <xs:element name="goalRef" type="RefType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="goalRef" type="RefType" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="InitialMarkingWrapperType">
+    <xs:complexType name="InitialMarkingType">
         <xs:sequence>
-            <!--Mapped from @XmlElement(name = "vertexRef")-->
             <xs:element name="vertexRef" type="RefType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="FailConditionsWrapperType">
-        <xs:sequence>
-            <xs:element name="failConditions" type="FailConditionType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <!--Base elements-->
-    <xs:complexType name="FailConditionType">
-        <!--FailConditionXml-->
-    </xs:complexType>
+    <!-- FailCondition è un'interfaccia: un elemento per ogni implementazione -->
+	<xs:complexType name="FailConditionType">
+	    <xs:attribute name="type" type="FailConditionKindType" use="required"/>
+	</xs:complexType>
+	
+	<xs:simpleType name="FailConditionKindType">
+	    <xs:restriction base="xs:token">
+	        <xs:enumeration value="anydetection"/>
+	        <xs:enumeration value="neverfail"/>
+	    </xs:restriction>
+	</xs:simpleType>
 
     <xs:complexType name="RefType">
-        <xs:attribute name="ref" type="xs:string" use="required"/>
+        <xs:attribute name="ref" type="UuidType" use="required"/>
     </xs:complexType>
 
+    <!-- Tipi semplici -->
+    <xs:simpleType name="UuidType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="NameType">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- UML: Strategy, con Greedy, Cautious, Random (il tuo mapper aggiunge low-hanging-fruit) -->
+    <xs:simpleType name="StrategyType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="greedy"/>
+            <xs:enumeration value="cautious"/>
+            <xs:enumeration value="low-hanging-fruit"/>
+            <xs:enumeration value="random"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- UML: «enumeration» GoalCombination -->
+    <xs:simpleType name="GoalCombinationType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ANY"/>
+            <xs:enumeration value="ALL"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- UML: timeBound: double. Positivo e finito (NaN fallisce i facet di range) -->
+    <xs:simpleType name="TimeBoundType">
+        <xs:restriction base="xs:double">
+            <xs:minExclusive value="0"/>
+            <xs:maxExclusive value="INF"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

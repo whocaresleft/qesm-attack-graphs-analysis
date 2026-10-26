@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import qesm.project.attack_graph.graph.AttackGraph;
 import qesm.project.attack_graph.vertex.Goal;
 import qesm.project.attack_graph.vertex.Vertex;
+import qesm.project.attack_scenario.fail_condition.AnyDetection;
+import qesm.project.attack_scenario.fail_condition.FailCondition;
+import qesm.project.attack_scenario.fail_condition.NeverFail;
 import qesm.project.attack_scenario.scenario.AttackScenario;
 import qesm.project.attack_scenario.strategy.AttackStrategy;
 import qesm.project.attack_scenario.strategy.Cautious;
@@ -13,6 +16,7 @@ import qesm.project.attack_scenario.strategy.Greedy;
 import qesm.project.attack_scenario.strategy.LowHangingFruit;
 import qesm.project.attack_scenario.strategy.Random;
 import qesm.project.translator.exception.AttackMapException;
+import qesm.project.translator.scenario.dto.fail_condition.FailConditionXml;
 import qesm.project.translator.scenario.dto.scenario.AttackScenarioXml;
 import qesm.project.translator.utility.XmlHelper;
 import qesm.project.utility.GoalCombination;
@@ -31,7 +35,8 @@ public class AttackScenarioMapper {
         		targets,
         		toGoalCombination(xml.goalsRequired),
         		toAttackStrategy(xml.strategy),
-        		xml.timeBound
+        		xml.timeBound,
+        		toFailCondition(xml.failCondition)
     		);
     }
     
@@ -55,6 +60,15 @@ public class AttackScenarioMapper {
     	catch (NullPointerException e) {
     		throw new AttackMapException("Attack strategy is null", e);
     	}
+    }
+    
+    private static FailCondition toFailCondition(FailConditionXml failCondition) throws AttackMapException {
+    	if (failCondition == null) return NeverFail.get();
+    	return switch (failCondition.type.trim().toLowerCase()) {
+    		case "neverfail" -> NeverFail.get();
+    		case "anydetection" -> AnyDetection.get();
+    		default -> throw new AttackMapException("Unknown fail condition: " + failCondition.type);
+    	};
     }
     
     private static GoalCombination toGoalCombination(String gr) {

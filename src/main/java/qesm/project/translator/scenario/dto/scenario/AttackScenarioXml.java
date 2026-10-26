@@ -25,11 +25,11 @@ public class AttackScenarioXml {
     @XmlElement(required = true) public GraphRefXml graph;
     @XmlElementWrapper(name = "targets")        @XmlElement(name = "goalRef")   public Set<RefXml> targets = new LinkedHashSet<>();
     @XmlElementWrapper(name = "initialMarking") @XmlElement(name = "vertexRef") public Set<RefXml> initialMarking = new LinkedHashSet<>();
-    @XmlElementWrapper(name = "failConditions") public Set<FailConditionXml> failConditions = new LinkedHashSet<>();
+    @XmlElement(name = "failCondition", required = true) public FailConditionXml failCondition;
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(failConditions, goalsRequired, graph, initialMarking, name, strategy, targets,
+		return Objects.hash(failCondition, goalsRequired, graph, initialMarking, name, strategy, targets,
 				Double.valueOf(timeBound), uuid);
 	}
 	@Override
@@ -41,7 +41,7 @@ public class AttackScenarioXml {
 		if (getClass() != obj.getClass())
 			return false;
 		AttackScenarioXml other = (AttackScenarioXml) obj;
-		return Objects.equals(failConditions, other.failConditions)
+		return Objects.equals(failCondition, other.failCondition)
 				&& Objects.equals(goalsRequired, other.goalsRequired) && Objects.equals(graph, other.graph)
 				&& Objects.equals(initialMarking, other.initialMarking) && Objects.equals(name, other.name)
 				&& Objects.equals(strategy, other.strategy) && Objects.equals(targets, other.targets)
@@ -53,6 +53,6 @@ public class AttackScenarioXml {
 	public String toString() {
 		return "AttackScenarioXml [uuid=" + uuid + ", name=" + name + ", strategy=" + strategy + ", goalsRequired="
 				+ goalsRequired + ", timeBound=" + timeBound + ", graph=" + graph + ", targets=" + targets
-				+ ", initialMarking=" + initialMarking + ", failConditions=" + failConditions + "]";
+				+ ", initialMarking=" + initialMarking + ", failConditions=" + failCondition + "]";
 	}
 }

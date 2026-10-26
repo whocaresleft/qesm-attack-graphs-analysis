@@ -1,0 +1,4 @@
+<attackScenario uuid="00000000-0000-0000-0000-000000000002" name="scenario" strategy="greedy" goalsRequired="ANY" timeBound="100">
+  <graph file="graph.xml"/>
+  <targets><goalRef ref="00000000-0000-0000-0000-0000000000e1"/></targets>
+</attackScenario>

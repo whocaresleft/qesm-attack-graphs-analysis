@@ -8,22 +8,25 @@ import qesm.project.utility.GoalCombination;
 import qesm.project.attack_graph.vertex.Vertex;
 import qesm.project.attack_graph.graph.AttackGraph;
 import qesm.project.attack_graph.vertex.Goal;
+import qesm.project.attack_scenario.fail_condition.FailCondition;
 import qesm.project.attack_scenario.strategy.AttackStrategy;
 
 public class AttackScenario {
 	
-	private UUID uuid;
-	private String name;
+	private final UUID uuid;
+	private final String name;
 	
-	private GoalCombination goalsRequired;
-	private double timeBound;
+	private final GoalCombination goalsRequired;
+	private final double timeBound;
 	
-	private AttackGraph graph;
-	private Set<Vertex> initialMarking;
-	private Set<Goal> targets;
+	private final AttackGraph graph;
+	private final Set<Vertex> initialMarking;
+	private final Set<Goal> targets;
 	
-	private AttackStrategy strategy;
+	private final AttackStrategy strategy;
 
+	private final FailCondition failCondition;
+	
 	public UUID getUuid() { return uuid; }
 	public String getName() { return name; }
 	public GoalCombination getGoalsRequired() { return goalsRequired; }
@@ -32,31 +35,20 @@ public class AttackScenario {
 	public Set<Vertex> getInitialMarking() { return Collections.unmodifiableSet(initialMarking); }
 	public Set<Goal> getTargets() { return Collections.unmodifiableSet(targets); }
 	public AttackStrategy getStrategy() { return strategy; }
-
-	private void setUuid(UUID uuid) { this.uuid = uuid; }
-	private void setName(String name) { this.name = name; }
-	private void setGoalsRequired(GoalCombination goalsRequired) { this.goalsRequired = goalsRequired; }
-	private void setTimeBound(double timeBound) {
-		if (timeBound <= 0.0) throw new IllegalArgumentException("Illegal duration, must be positive: " + timeBound);
-		this.timeBound = timeBound;
-	}
-	private void setGraph(AttackGraph graph) { this.graph = graph; }
-	private void setInitialMarking(Set<Vertex> initialMarking) { this.initialMarking = initialMarking; }
-	private void setTargets(Set<Goal> targets) {
-		if (targets.isEmpty()) throw new IllegalArgumentException("Illegal targets, must contain at least 1 target");
-		this.targets = targets;
-		}
-	private void setStrategy(AttackStrategy strategy) { this.strategy = strategy; }
+	public FailCondition getFailCondition() { return failCondition; }
 	
-	public AttackScenario(UUID uuid, String name, AttackGraph graph, Set<Vertex> initialMarking, Set<Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, double timeBound) {
-		setUuid(uuid);
-		setName(name);
-		setGraph(graph);
-		setInitialMarking(initialMarking);
-		setTargets(targets);
-		setGoalsRequired(goalsRequired);
-		setStrategy(strategy);
-		setTimeBound(timeBound);
+	public AttackScenario(UUID uuid, String name, AttackGraph graph, Set<Vertex> initialMarking, Set<Goal> targets, GoalCombination goalsRequired, AttackStrategy strategy, double timeBound, FailCondition failCondition) {
+		this.uuid = uuid;
+		this.name = name;
+		this.graph = graph;
+		this.initialMarking = initialMarking;
+		if (targets.isEmpty()) throw new IllegalArgumentException("Must contain at least 1 target");
+		this.targets = targets;
+		this.goalsRequired = goalsRequired;
+		this.strategy = strategy;
+		if (!(timeBound > 0.0) || Double.isInfinite(timeBound)) throw new IllegalArgumentException("Illegal duration, must be positive and finite: " + timeBound);
+		this.timeBound = timeBound;
+		this.failCondition = failCondition;
 	}
 	
 	
@@ -64,11 +56,11 @@ public class AttackScenario {
 	public String toString() {
 		return "AttackScenario [uuid=" + uuid + ", name=" + name + ", goalsRequired=" + goalsRequired + ", timeBound="
 				+ timeBound + ", graph=" + graph + ", initialMarking=" + initialMarking + ", targets=" + targets
-				+ ", strategy=" + strategy + "]";
+				+ ", strategy=" + strategy + ", failCondition=" + failCondition + "]";
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(goalsRequired, graph, initialMarking, name, strategy, targets, timeBound, uuid);
+		return Objects.hash(goalsRequired, graph, initialMarking, name, strategy, targets, timeBound, uuid, failCondition);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -82,6 +74,6 @@ public class AttackScenario {
 		return goalsRequired == other.goalsRequired && Objects.equals(graph, other.graph)
 				&& Objects.equals(initialMarking, other.initialMarking) && Objects.equals(name, other.name)
 				&& Objects.equals(strategy, other.strategy) && Objects.equals(targets, other.targets)
-				&& Objects.equals(timeBound, other.timeBound) && Objects.equals(uuid, other.uuid);
+				&& Objects.equals(timeBound, other.timeBound) && Objects.equals(uuid, other.uuid) && Objects.equals(failCondition, other.failCondition);
 	}
 }
