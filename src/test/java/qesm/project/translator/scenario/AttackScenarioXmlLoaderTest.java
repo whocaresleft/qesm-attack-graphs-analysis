@@ -24,7 +24,7 @@ public class AttackScenarioXmlLoaderTest {
 		
 		@Test
 		void xmlGraph01Minimal() {
-			AttackScenarioXml xml = AttackScenarioXmlLoader.load(resource("01-valid-minimal.xml"));
+			AttackScenarioXml xml = AttackScenarioXmlLoader.get().load(resource("01-valid-minimal.xml"));
 			
 			assertThat(xml.uuid).isEqualTo("00000000-0000-0000-0000-000000000002");
 			assertThat(xml.name).isEqualTo("scenario");
@@ -50,7 +50,7 @@ public class AttackScenarioXmlLoaderTest {
 		
 		@Test
 		void xmlGraph02Full() {
-			AttackScenarioXml xml = AttackScenarioXmlLoader.load(resource("02-valid-full.xml"));
+			AttackScenarioXml xml = AttackScenarioXmlLoader.get().load(resource("02-valid-full.xml"));
 			
 			assertThat(xml.uuid).isEqualTo("00000000-0000-0000-0000-000000000002");
 			assertThat(xml.name).isEqualTo("full-scenario");
@@ -88,7 +88,7 @@ public class AttackScenarioXmlLoaderTest {
 		
 		@Test
 		void xmlGraph03SemanticallyWrong() {
-			AttackScenarioXml xml = AttackScenarioXmlLoader.load(resource("03-valid-semantically-wrong.xml"));
+			AttackScenarioXml xml = AttackScenarioXmlLoader.get().load(resource("03-valid-semantically-wrong.xml"));
 			
 			assertThat(xml.uuid).isEqualTo("00000000-0000-0000-0000-000000000002");
 			assertThat(xml.name).isEqualTo("scenario");
@@ -133,7 +133,7 @@ public class AttackScenarioXmlLoaderTest {
 		void xmlGraphInvalidXmlShouldThrowAttackLoadException(String filename) {
 			String completeFilename = filename + ".xml";
 			assertThatExceptionOfType(AttackLoadException.class)
-	    		.isThrownBy(() -> AttackScenarioXmlLoader.load(resource(completeFilename)))
+	    		.isThrownBy(() -> AttackScenarioXmlLoader.get().load(resource(completeFilename)))
 		    	.withMessage("Error while loading: XML is not valid: " + completeFilename);
 		}
 	}

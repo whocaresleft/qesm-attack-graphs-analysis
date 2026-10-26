@@ -13,6 +13,8 @@ import qesm.project.translator.utility.XmlHelper;
 
 public class AttackModelXmlLoader {
 	
+	private static final AttackModelXmlLoader INSTANCE = new AttackModelXmlLoader();
+	
 	private static final Schema SCHEMA;
 	
 	static {
@@ -27,7 +29,11 @@ public class AttackModelXmlLoader {
 		}
 	}
 	
-	public static AttackModelXml load(Path file) throws AttackLoadException {
+	private AttackModelXmlLoader() { }
+	
+	public static AttackModelXmlLoader get() { return INSTANCE; }
+	
+	public AttackModelXml load(Path file) throws AttackLoadException {
 		Path abs = file.toAbsolutePath().normalize();
 		return XmlHelper.unmarshal(abs, AttackModelXml.class, SCHEMA);
 	}

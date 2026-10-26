@@ -12,6 +12,8 @@ import qesm.project.translator.utility.XmlHelper;
 
 public class AttackGraphXmlLoader {
 	
+	private static final AttackGraphXmlLoader INSTANCE = new AttackGraphXmlLoader();
+	
 	private static final Schema SCHEMA;
 	
 	static {
@@ -26,7 +28,11 @@ public class AttackGraphXmlLoader {
 		}
 	}
 	
-	public static AttackGraphXml load(Path file) throws AttackLoadException {
+	private AttackGraphXmlLoader() { }
+	
+	public static AttackGraphXmlLoader get() { return INSTANCE; }
+	
+	public AttackGraphXml load(Path file) throws AttackLoadException {
 		Path abs = file.toAbsolutePath().normalize();
 		return XmlHelper.unmarshal(abs, AttackGraphXml.class, SCHEMA);
 	}

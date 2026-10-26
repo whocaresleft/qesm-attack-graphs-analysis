@@ -20,7 +20,7 @@ public class AttackModelXmlLoaderTest {
 		
 		@Test
 		void xmlGraph01() {
-			AttackModelXml xml = AttackModelXmlLoader.load(resource("01-valid.xml"));
+			AttackModelXml xml = AttackModelXmlLoader.get().load(resource("01-valid.xml"));
 			
 			assertThat(xml.graph).isNotNull();
 			
@@ -39,7 +39,7 @@ public class AttackModelXmlLoaderTest {
 		@Test
 		void xmlGraph02() {
 			assertThatExceptionOfType(AttackLoadException.class)
-	    		.isThrownBy(() -> AttackModelXmlLoader.load(resource("02-invalid-model-no-graph.xml")))
+	    		.isThrownBy(() -> AttackModelXmlLoader.get().load(resource("02-invalid-model-no-graph.xml")))
 		    	.withMessage("Error while loading: XML is not valid: 02-invalid-model-no-graph.xml");
 		}
 	}

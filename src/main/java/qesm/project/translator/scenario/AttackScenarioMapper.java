@@ -23,6 +23,13 @@ import qesm.project.translator.utility.XmlHelper;
 import qesm.project.utility.GoalCombination;
 
 public class AttackScenarioMapper {
+	
+	private static final AttackScenarioMapper INSTANCE = new AttackScenarioMapper();
+	
+	private AttackScenarioMapper() { }
+	
+	public static AttackScenarioMapper get() { return INSTANCE; }
+	
     public AttackScenario toAttackScenario(AttackScenarioXml xml, AttackGraph graph) {
     	if (xml == null) throw new AttackMapException("AttackScenario Xml is null");
     	if (xml.graph == null) throw new AttackMapException("AttackScenario Xml '<graph>' is null");

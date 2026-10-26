@@ -20,17 +20,9 @@ public class AttackModelMapper {
 	private final AttackGraphMapper graphMapper;
 	private final AttackScenarioMapper scenarioMapper;
 	
-	private AttackModelMapper() {
-		this(new AttackGraphMapper(), new AttackScenarioMapper());
-	}
-	
 	private AttackModelMapper(AttackGraphMapper graphMapper, AttackScenarioMapper scenarioMapper) {
 		this.graphMapper = graphMapper;
 		this.scenarioMapper = scenarioMapper;
-	}
-	
-	public static AttackModelMapper create() {
-		return new AttackModelMapper();
 	}
 	
 	public static AttackModelMapper create(AttackGraphMapper graphMapper, AttackScenarioMapper scenarioMapper) {

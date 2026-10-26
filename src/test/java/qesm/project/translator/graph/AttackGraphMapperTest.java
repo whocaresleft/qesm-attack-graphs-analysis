@@ -39,7 +39,7 @@ class AttackGraphMapperTest {
 	
 	@BeforeEach
 	void setup() {
-		mapper = new AttackGraphMapper();
+		mapper = AttackGraphMapper.get();
 	}
 	
 	@Nested
@@ -49,7 +49,7 @@ class AttackGraphMapperTest {
 		class NormalCases {
 			@Test
 			void xmlGraph01Minimal() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("01-valid-minimal.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("01-valid-minimal.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("minimal");
@@ -102,7 +102,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph02Full() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("02-valid-full.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("02-valid-full.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("full");
@@ -185,7 +185,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph03ValidChain() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("03-valid-chain.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("03-valid-chain.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("chain");
@@ -250,7 +250,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph04TwoPaths() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("04-valid-two-paths.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("04-valid-two-paths.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("two-paths");
@@ -311,7 +311,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph05CertainSuccess() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("05-valid-certain-success.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("05-valid-certain-success.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("certain-success");
@@ -352,7 +352,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph06UuidWithUpperCaseAndSpaces() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("06-valid-uuid-case-and-spaces.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("06-valid-uuid-case-and-spaces.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("case");
@@ -395,7 +395,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph20StepNoRequires() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("20-valid-step-no-requires.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("20-valid-step-no-requires.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("no-requires");
@@ -428,7 +428,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph21StepNoProduces() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("21-valid-step-no-produces.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("21-valid-step-no-produces.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("no-produces");
@@ -464,7 +464,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph23NoSteps() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("23-edge-vertices-no-steps.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("23-edge-vertices-no-steps.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("no-steps");
@@ -497,7 +497,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph24UnreachableGoal() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("24-edge-unreachable-goal.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("24-edge-unreachable-goal.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("unreachable-goal");
@@ -552,7 +552,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph25ReadRequirement() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("25-edge-unused-access.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("25-edge-unused-access.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("unused-access");
@@ -606,7 +606,7 @@ class AttackGraphMapperTest {
 			
 			@Test
 			void xmlGraph27DuplicateNames() {
-				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("27-edge-duplicate-names.xml")));
+				AttackGraph graph = mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("27-edge-duplicate-names.xml")));
 				
 				assertThat(graph.getUuid()).isEqualTo(XmlHelper.parseUuid("00000000-0000-0000-0000-000000000001"));
 				assertThat(graph.getName()).isEqualTo("dup-names");
@@ -669,7 +669,7 @@ class AttackGraphMapperTest {
 			@Test
 			void xmlGraph07WithBadUuidShouldThrow() {
 				assertThatExceptionOfType(IllegalArgumentException.class)
-					.isThrownBy(() -> mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("07-invalid-bad-uuid.xml"))));
+					.isThrownBy(() -> mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("07-invalid-bad-uuid.xml"))));
 			}
 			
 			@ParameterizedTest(name = "{index}: ''{0}''")
@@ -688,7 +688,7 @@ class AttackGraphMapperTest {
 				"19-invalid-duplicate-step,Error while mapping: Duplicate step with uuid 00000000-0000-0000-0000-000000000051",
 			})
 			void xmlGraphInvalidXmlShouldThrowAttackMapException(String filename, String expectedErrorMessage) {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource(filename + ".xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource(filename + ".xml"));
 				
 				assertThatExceptionOfType(AttackMapException.class)
 		    		.isThrownBy(() -> mapper.toAttackGraph(xml))
@@ -702,7 +702,7 @@ class AttackGraphMapperTest {
 			@Test
 			void xmlGraph26CycleShouldThrow() {
 				assertThatExceptionOfType(AttackMapException.class)
-					.isThrownBy(() -> mapper.toAttackGraph(AttackGraphXmlLoader.load(resource("26-edge-cycle.xml"))))
+					.isThrownBy(() -> mapper.toAttackGraph(AttackGraphXmlLoader.get().load(resource("26-edge-cycle.xml"))))
 					.withMessage("Error while mapping: Cycle detected");
 			}
 		}

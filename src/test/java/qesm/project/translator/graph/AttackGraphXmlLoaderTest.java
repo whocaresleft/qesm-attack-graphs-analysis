@@ -29,7 +29,7 @@ public class AttackGraphXmlLoaderTest {
 		
 			@Test
 			void xmlGraph01Minimal() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("01-valid-minimal.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("01-valid-minimal.xml"));
 				assertThat(xml)
 					.isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -85,7 +85,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph02Full() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("02-valid-full.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("02-valid-full.xml"));
 				assertThat(xml)
 				    .isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -169,7 +169,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph03ValidChain() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("03-valid-chain.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("03-valid-chain.xml"));
 				assertThat(xml)
 				    .isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -243,7 +243,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph04TwoPaths() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("04-valid-two-paths.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("04-valid-two-paths.xml"));
 				assertThat(xml)
 				    .isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -317,7 +317,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph05CertainSuccess() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("05-valid-certain-success.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("05-valid-certain-success.xml"));
 				assertThat(xml)
 				    .isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -387,7 +387,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph06UuidWithUpperCaseAndSpaces() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("06-valid-uuid-case-and-spaces.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("06-valid-uuid-case-and-spaces.xml"));
 				assertThat(xml)
 				    .isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -457,7 +457,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph18DuplicateRefInStep() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("18-valid-duplicate-ref-in-step.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("18-valid-duplicate-ref-in-step.xml"));
 				assertThat(xml)
 				    .isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -531,7 +531,7 @@ public class AttackGraphXmlLoaderTest {
 			
 			@Test
 			void xmlGraph15EdgeCaseInXmlEmptyGraphIsOk() {
-				AttackGraphXml xml = AttackGraphXmlLoader.load(resource("15-edge-empty-graph.xml"));
+				AttackGraphXml xml = AttackGraphXmlLoader.get().load(resource("15-edge-empty-graph.xml"));
 				assertThat(xml)
 					.isOfAnyClassIn(AttackGraphXml.class);
 				
@@ -568,7 +568,7 @@ public class AttackGraphXmlLoaderTest {
 			void xmlGraphInvalidXmlShouldThrowAttackLoadException(String filename) {
 				String completeFilename = filename + ".xml";
 				assertThatExceptionOfType(AttackLoadException.class)
-		    		.isThrownBy(() -> AttackGraphXmlLoader.load(resource(completeFilename)))
+		    		.isThrownBy(() -> AttackGraphXmlLoader.get().load(resource(completeFilename)))
 			    	.withMessage("Error while loading: XML is not valid: " + completeFilename);
 			}
 		}
@@ -584,7 +584,7 @@ public class AttackGraphXmlLoaderTest {
 			void xmlGraphEdgeCaseInXmlShouldThrow(String filename) {
 				String completeFilename = filename + ".xml";
 				assertThatExceptionOfType(AttackLoadException.class)
-		    		.isThrownBy(() -> AttackGraphXmlLoader.load(resource(completeFilename)))
+		    		.isThrownBy(() -> AttackGraphXmlLoader.get().load(resource(completeFilename)))
 			    	.withMessage("Error while loading: XML is not valid: " + completeFilename);
 			}
 		}

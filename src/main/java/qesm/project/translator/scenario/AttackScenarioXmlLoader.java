@@ -13,6 +13,8 @@ import qesm.project.translator.utility.XmlHelper;
 
 public class AttackScenarioXmlLoader {
 	
+	private static final AttackScenarioXmlLoader INSTANCE = new AttackScenarioXmlLoader();
+	
 	private static final Schema SCHEMA;
 	
 	static {
@@ -27,7 +29,11 @@ public class AttackScenarioXmlLoader {
 		}
 	}
 	
-	public static AttackScenarioXml load(Path file) throws AttackLoadException {
+	private AttackScenarioXmlLoader() { }
+	
+	public static AttackScenarioXmlLoader get() { return INSTANCE; }
+	
+	public AttackScenarioXml load(Path file) throws AttackLoadException {
 		Path abs = file.toAbsolutePath().normalize();
 		return XmlHelper.unmarshal(abs, AttackScenarioXml.class, SCHEMA);
 	}

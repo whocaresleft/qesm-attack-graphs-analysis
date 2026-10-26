@@ -37,8 +37,8 @@ public class AttackScenarioMapperTest {
 	
 	@BeforeEach
 	void setup() {
-		mapper = new AttackScenarioMapper();
-		graph = new AttackGraphMapper().toAttackGraph(AttackGraphXmlLoader.load(resource("sampleGraph.xml")));
+		mapper = AttackScenarioMapper.get();
+		graph = AttackGraphMapper.get().toAttackGraph(AttackGraphXmlLoader.get().load(resource("sampleGraph.xml")));
 	}
 	
 	@Nested
@@ -46,7 +46,7 @@ public class AttackScenarioMapperTest {
 		
 		@Test
 		void xmlGraph01Minimal() {
-			AttackScenario scenario = mapper.toAttackScenario(AttackScenarioXmlLoader.load(resource("01-valid-minimal.xml")), graph);
+			AttackScenario scenario = mapper.toAttackScenario(AttackScenarioXmlLoader.get().load(resource("01-valid-minimal.xml")), graph);
 			
 			assertThat(scenario.getUuid()).isEqualTo(XmlHelper.parseUuid("10000000-0000-0000-0000-000000000001"));
 			assertThat(scenario.getName()).isEqualTo("MinimalScenario");
@@ -65,7 +65,7 @@ public class AttackScenarioMapperTest {
 		
 		@Test
 		void xmlGraph02Full() {
-			AttackScenario scenario = mapper.toAttackScenario(AttackScenarioXmlLoader.load(resource("02-valid-full.xml")), graph);
+			AttackScenario scenario = mapper.toAttackScenario(AttackScenarioXmlLoader.get().load(resource("02-valid-full.xml")), graph);
 			
 			assertThat(scenario.getUuid()).isEqualTo(XmlHelper.parseUuid("10000000-0000-0000-0000-000000000002"));
 			assertThat(scenario.getName()).isEqualTo("FullScenario");
@@ -88,7 +88,7 @@ public class AttackScenarioMapperTest {
 		
 		@Test
 		void xmlGraph03OtherStrategies() {
-			AttackScenario scenario = mapper.toAttackScenario(AttackScenarioXmlLoader.load(resource("03-valid-other-strategies.xml")), graph);
+			AttackScenario scenario = mapper.toAttackScenario(AttackScenarioXmlLoader.get().load(resource("03-valid-other-strategies.xml")), graph);
 			
 			assertThat(scenario.getUuid()).isEqualTo(XmlHelper.parseUuid("10000000-0000-0000-0000-000000000003"));
 			assertThat(scenario.getName()).isEqualTo("OtherStrategies");
@@ -121,7 +121,7 @@ public class AttackScenarioMapperTest {
 			"07-invalid-mismatched-graph-uuid,Error while mapping: Graph uuid is not coherent with given AttackGraph"
 		})
 		void xmlGraphInvalidXmlShouldThrowAttackMapException(String fileName, String expectedErrorMessage) {
-			AttackScenarioXml xml = AttackScenarioXmlLoader.load(resource(fileName + ".xml"));
+			AttackScenarioXml xml = AttackScenarioXmlLoader.get().load(resource(fileName + ".xml"));
 		
 			assertThatExceptionOfType(AttackMapException.class)
 				.isThrownBy(() -> mapper.toAttackScenario(xml, graph))

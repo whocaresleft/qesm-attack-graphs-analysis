@@ -38,6 +38,12 @@ import qesm.project.utility.NoneDistribution;
 
 public class AttackGraphMapper {
 
+	private static final AttackGraphMapper INSTANCE = new AttackGraphMapper();
+	
+	private AttackGraphMapper() { }
+	
+	public static AttackGraphMapper get() { return INSTANCE; }
+	
     public AttackGraph toAttackGraph(AttackGraphXml xml) throws AttackMapException {
     	if (xml == null) throw new AttackMapException("AttackGraph Xml is null");
     	
