@@ -17,7 +17,6 @@ public class XmlHelper {
 	
 	public static JAXBContext createContext() {
 		try { return JAXBContext.newInstance(
-				qesm.project.translator.model.dto.AttackModelXml.class,
 				qesm.project.translator.graph.dto.graph.AttackGraphXml.class,
 				qesm.project.translator.scenario.dto.scenario.AttackScenarioXml.class
 			); }
