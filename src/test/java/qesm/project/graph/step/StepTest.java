@@ -1,7 +1,6 @@
 package qesm.project.graph.step;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -24,7 +23,6 @@ public class StepTest {
 	@Test
 	public void testBuildStepWhenProbabilitiesSumToOne() {
 		Step step = createStepWithProbabilities(0.6, 0.3, 0.1);
-
 		assertThat(step.getUuid()).isEqualTo(STEP_UUID);
 		assertThat(step.getName()).isEqualTo(STEP_NAME);
 		assertThat(step.getSuccessProbability()).isEqualTo(0.6);
@@ -80,7 +78,6 @@ public class StepTest {
 			.withUuid(STEP_UUID)
 			.withName(STEP_NAME)
 			.withSuccessProbability(1.0);
-
 		assertThatExceptionOfType(MissingStepDurationException.class)
 			.isThrownBy(builder::build)
 			.withMessage("Missing duration");

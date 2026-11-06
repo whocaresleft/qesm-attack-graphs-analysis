@@ -19,14 +19,12 @@ public class XmlHelperTest {
 	@Test
 	public void testParseUuidWhenUuidIsValid() {
 		UUID parsedUuid = XmlHelper.parseUuid(VALID_UUID);
-
 		assertThat(parsedUuid).isEqualTo(UUID.fromString(VALID_UUID));
 	}
 
 	@Test
 	public void testParseUuidWhenUuidHasLeadingAndTrailingSpaces() {
 		UUID parsedUuid = XmlHelper.parseUuid("  " + VALID_UUID + "  ");
-
 		assertThat(parsedUuid).isEqualTo(UUID.fromString(VALID_UUID));
 	}
 
@@ -40,7 +38,6 @@ public class XmlHelperTest {
 	@Test
 	public void testUnmarshalWhenXmlIsInvalidThrowsException() {
 		Path invalidXmlPath = TestResourceHelper.resource("/xml/", "invalid-xml.xml");
-
 		assertThatExceptionOfType(XmlLoadingException.class)
 			.isThrownBy(() -> XmlHelper.unmarshal(invalidXmlPath, AttackGraphXml.class))
 			.withMessage("Error while loading: XML is not valid: invalid-xml.xml");

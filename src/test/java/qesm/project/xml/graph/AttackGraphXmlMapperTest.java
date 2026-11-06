@@ -175,7 +175,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenUuidsHaveUpperCaseAndSpaces() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("06-valid-uuid-case-and-spaces.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 1.0, NoneDistribution.get());
 		Step expectedStep = StepBuilder.create()
@@ -188,7 +187,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("case");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess, expectedGoal);
@@ -198,7 +196,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenStepHasNoRequirements() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("20-valid-step-no-requires.xml"));
-
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 10.0, NoneDistribution.get());
 		Step expectedStep = StepBuilder.create()
 			.withUuid(STEP_ST1_UUID)
@@ -209,7 +206,6 @@ public class AttackGraphXmlMapperTest {
 			.withDuration(Exponential.fromRate(1.0))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("no-requires");
 		assertThatIterable(graph.getVertices()).containsExactly(expectedGoal);
@@ -219,7 +215,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenStepHasNoOutcomes() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("21-valid-step-no-produces.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Step expectedStep = StepBuilder.create()
 			.withUuid(STEP_ST1_UUID)
@@ -230,7 +225,6 @@ public class AttackGraphXmlMapperTest {
 			.withDuration(Exponential.fromRate(1.0))
 			.withRequirements(Set.of(expectedAccess))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("no-produces");
 		assertThatIterable(graph.getVertices()).containsExactly(expectedAccess);
@@ -240,10 +234,8 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenGraphHasVerticesAndNoSteps() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("23-edge-vertices-no-steps.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 10.0, NoneDistribution.get());
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("no-steps");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess, expectedGoal);
@@ -253,7 +245,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenGraphContainsUnreachableGoal() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("24-edge-unreachable-goal.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Goal expectedGoal1 = Goal.create(GOAL_G1_UUID, "G1", 10.0, NoneDistribution.get());
 		Goal expectedGoal2 = Goal.create(GOAL_G2_UUID, "G2", 3.0, NoneDistribution.get());
@@ -267,7 +258,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess))
 			.withOutcomes(Set.of(expectedGoal1))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("unreachable-goal");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess, expectedGoal1, expectedGoal2);
@@ -277,7 +267,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenGraphContainsUnusedAccess() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("25-edge-unused-access.xml"));
-
 		Access expectedAccess1 = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Access expectedAccess2 = Access.create(ACCESS_A2_UUID, "A2", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 10.0, NoneDistribution.get());
@@ -291,7 +280,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess2))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("unused-access");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess1, expectedAccess2, expectedGoal);
@@ -301,7 +289,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenVerticesHaveDuplicateNames() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("27-edge-duplicate-names.xml"));
-
 		Access expectedAccess1 = Access.create(ACCESS_A1_UUID, "same", NoneDistribution.get());
 		Access expectedAccess2 = Access.create(ACCESS_A2_UUID, "same", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 10.0, NoneDistribution.get());
@@ -315,7 +302,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess1, expectedAccess2))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("dup-names");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess1, expectedAccess2, expectedGoal);
@@ -325,7 +311,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenUuidIsInvalidThrowsException() {
 		AttackGraphXml xml = loadGraphXml("07-invalid-bad-uuid.xml");
-
 		assertThatExceptionOfType(InvalidUuidFormatException.class)
 			.isThrownBy(() -> mapper.toAttackGraph(xml));
 	}
@@ -436,7 +421,6 @@ public class AttackGraphXmlMapperTest {
 
 	private void assertMapThrowsXmlMappingException(String fileName, String expectedMessage) {
 		AttackGraphXml xml = loadGraphXml(fileName);
-
 		assertThatExceptionOfType(XmlMappingException.class)
 			.isThrownBy(() -> mapper.toAttackGraph(xml))
 			.withMessage(expectedMessage);

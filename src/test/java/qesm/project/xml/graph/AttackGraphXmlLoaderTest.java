@@ -35,7 +35,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlIsMinimal() {
 		AttackGraphXml xml = loader.load(resource("01-valid-minimal.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("minimal");
 		assertThatIterable(xml.vertices.accesses)
@@ -46,7 +45,6 @@ public class AttackGraphXmlLoaderTest {
 			.containsExactly(tuple(GOAL_G1_UUID, "G1", 10.0, null));
 		assertThat(xml.vertices.skills).isEmpty();
 		assertThat(xml.vertices.knowledge).isEmpty();
-
 		StepXml expectedStep = createExpectedStep(
 			STEP_ST1_UUID, "ST1", 0.7, 0.2, 0.1,
 			exponentialXml(0.5), null,
@@ -59,7 +57,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlIsFull() {
 		AttackGraphXml xml = loader.load(resource("02-valid-full.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("full");
 		assertThatIterable(xml.vertices.accesses)
@@ -77,7 +74,6 @@ public class AttackGraphXmlLoaderTest {
 		assertThatIterable(xml.vertices.knowledge)
 			.extracting(knowledge -> knowledge.uuid, knowledge -> knowledge.name)
 			.containsExactly(tuple(KNOWLEDGE_K1_UUID, "K1"));
-
 		StepXml expectedStep = createExpectedStep(
 			STEP_ST1_UUID, "ST1", 0.6, 0.3, 0.1,
 			exponentialXml(1.0), exponentialXml(0.1),
@@ -90,7 +86,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlContainsChainOfSteps() {
 		AttackGraphXml xml = loader.load(resource("03-valid-chain.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("chain");
 		assertThatIterable(xml.vertices.accesses)
@@ -123,7 +118,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlContainsTwoPathsToGoal() {
 		AttackGraphXml xml = loader.load(resource("04-valid-two-paths.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("two-paths");
 		assertThatIterable(xml.vertices.accesses)
@@ -136,7 +130,6 @@ public class AttackGraphXmlLoaderTest {
 			.extracting(skill -> skill.uuid, skill -> skill.name)
 			.containsExactly(tuple(SKILL_S1_UUID, "S1"));
 		assertThat(xml.vertices.knowledge).isEmpty();
-
 		StepXml expectedStep1 = createExpectedStep(
 			STEP_ST1_UUID, "ST1", 0.5, 0.4, 0.1,
 			exponentialXml(1.0), null,
@@ -155,7 +148,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenStepHasCertainSuccess() {
 		AttackGraphXml xml = loader.load(resource("05-valid-certain-success.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("certain-success");
 		assertThatIterable(xml.vertices.accesses)
@@ -164,7 +156,6 @@ public class AttackGraphXmlLoaderTest {
 		assertThatIterable(xml.vertices.goals)
 			.extracting(goal -> goal.uuid, goal -> goal.name, goal -> goal.value, goal -> goal.detectionTime)
 			.containsExactly(tuple(GOAL_G1_UUID, "G1", 0.0, null));
-
 		StepXml expectedStep = createExpectedStep(
 			STEP_ST1_UUID, "ST1", 1.0, 0.0, 0.0,
 			exponentialXml(1.0), null,
@@ -177,7 +168,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenUuidsContainUpperCaseAndSpaces() {
 		AttackGraphXml xml = loader.load(resource("06-valid-uuid-case-and-spaces.xml"));
-
 		assertThat(xml.uuid).isEqualTo(" 00000000-0000-0000-0000-000000000001 ");
 		assertThat(xml.name).isEqualTo("case");
 		assertThatIterable(xml.vertices.accesses)
@@ -191,7 +181,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenStepContainsDuplicateRefsDeduplicatesThem() {
 		AttackGraphXml xml = loader.load(resource("18-valid-duplicate-ref-in-step.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("dup-ref");
 		StepXml expectedStep = createExpectedStep(
@@ -206,7 +195,6 @@ public class AttackGraphXmlLoaderTest {
 	@Test
 	public void testLoadWhenGraphHasNoVerticesAndNoSteps() {
 		AttackGraphXml xml = loader.load(resource("15-edge-empty-graph.xml"));
-
 		assertThat(xml.uuid).isEqualTo(GRAPH_UUID);
 		assertThat(xml.name).isEqualTo("empty");
 		assertThat(xml.vertices.accesses).isEmpty();
