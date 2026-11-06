@@ -1,9 +1,6 @@
 package qesm.project.xml.scenario;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatIterable;
-import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.Assertions.*;
 
 import java.nio.file.Path;
 import java.util.UUID;
@@ -46,7 +43,6 @@ public class AttackScenarioXmlMapperTest {
 	@Test
 	public void testToAttackScenarioWhenXmlIsMinimal() {
 		AttackScenario scenario = mapper.toAttackScenario(loadScenarioXml("01-valid-minimal.xml"), graph);
-
 		assertThat(scenario).isNotNull();
 		assertThat(scenario.getUuid()).isEqualTo(XmlHelper.parseUuid("10000000-0000-0000-0000-000000000001"));
 		assertThat(scenario.getName()).isEqualTo("MinimalScenario");
@@ -62,7 +58,6 @@ public class AttackScenarioXmlMapperTest {
 	@Test
 	public void testToAttackScenarioWhenXmlIsFull() {
 		AttackScenario scenario = mapper.toAttackScenario(loadScenarioXml("02-valid-full.xml"), graph);
-
 		assertThat(scenario).isNotNull();
 		assertThat(scenario.getUuid()).isEqualTo(XmlHelper.parseUuid("10000000-0000-0000-0000-000000000002"));
 		assertThat(scenario.getName()).isEqualTo("FullScenario");
@@ -81,7 +76,6 @@ public class AttackScenarioXmlMapperTest {
 	@Test
 	public void testToAttackScenarioWhenStrategyIsLowHangingFruit() {
 		AttackScenario scenario = mapper.toAttackScenario(loadScenarioXml("03-valid-other-strategies.xml"), graph);
-
 		assertThat(scenario).isNotNull();
 		assertThat(scenario.getUuid()).isEqualTo(XmlHelper.parseUuid("10000000-0000-0000-0000-000000000003"));
 		assertThat(scenario.getName()).isEqualTo("OtherStrategies");
@@ -89,16 +83,13 @@ public class AttackScenarioXmlMapperTest {
 		assertThat(scenario.getGoalsRequired()).isEqualTo(GoalCombination.ANY);
 		assertThat(scenario.getTimeBound()).isCloseTo(50.0, within(EPSILON));
 		assertThat(scenario.getFailCondition()).isExactlyInstanceOf(NeverFail.class);
-		assertThatIterable(scenario.getInitialMarking())
-			.containsExactly(graph.getVertexByUuid(ACCESS_A1_UUID).orElseThrow());
-		assertThatIterable(scenario.getTargets())
-			.containsExactly((Goal) graph.getVertexByUuid(GOAL_G1_UUID).orElseThrow());
+		assertThatIterable(scenario.getInitialMarking()).containsExactly(graph.getVertexByUuid(ACCESS_A1_UUID).orElseThrow());
+		assertThatIterable(scenario.getTargets()).containsExactly((Goal) graph.getVertexByUuid(GOAL_G1_UUID).orElseThrow());
 	}
 
 	@Test
 	public void testToAttackScenarioWhenTargetDoesNotExistInGraphThrowsException() {
 		AttackScenarioXml xml = loadScenarioXml("04-invalid-unknown-target.xml");
-
 		assertThatExceptionOfType(XmlMappingException.class)
 			.isThrownBy(() -> mapper.toAttackScenario(xml, graph))
 			.withMessage("Error while mapping: Scenario 'UnknownTarget': target unknown 00000000-0000-0000-0000-999999999999");
@@ -107,7 +98,6 @@ public class AttackScenarioXmlMapperTest {
 	@Test
 	public void testToAttackScenarioWhenTargetIsNotAGoalThrowsException() {
 		AttackScenarioXml xml = loadScenarioXml("05-invalid-target-is-not-goal.xml");
-
 		assertThatExceptionOfType(XmlMappingException.class)
 			.isThrownBy(() -> mapper.toAttackScenario(xml, graph))
 			.withMessage("Error while mapping: Vertex 'A1' is not a Goal");
@@ -116,7 +106,6 @@ public class AttackScenarioXmlMapperTest {
 	@Test
 	public void testToAttackScenarioWhenInitialMarkingVertexDoesNotExistInGraphThrowsException() {
 		AttackScenarioXml xml = loadScenarioXml("06-invalid-unknown-initial-marking.xml");
-
 		assertThatExceptionOfType(XmlMappingException.class)
 			.isThrownBy(() -> mapper.toAttackScenario(xml, graph))
 			.withMessage("Error while mapping: Scenario 'UnknownMarking': vertex unknown 00000000-0000-0000-0000-999999999999");
@@ -125,7 +114,6 @@ public class AttackScenarioXmlMapperTest {
 	@Test
 	public void testToAttackScenarioWhenGraphUuidDoesNotMatchThrowsException() {
 		AttackScenarioXml xml = loadScenarioXml("07-invalid-mismatched-graph-uuid.xml");
-
 		assertThatExceptionOfType(XmlMappingException.class)
 			.isThrownBy(() -> mapper.toAttackScenario(xml, graph))
 			.withMessage("Error while mapping: Graph uuid is not coherent with given AttackGraph");

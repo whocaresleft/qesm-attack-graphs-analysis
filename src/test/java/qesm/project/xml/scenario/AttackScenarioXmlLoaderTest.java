@@ -1,9 +1,6 @@
 package qesm.project.xml.scenario;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatIterable;
-import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.Assertions.*;
 
 import java.nio.file.Path;
 
@@ -34,7 +31,6 @@ public class AttackScenarioXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlIsMinimal() {
 		AttackScenarioXml xml = loader.load(resource("01-valid-minimal.xml"));
-
 		assertThat(xml).isNotNull();
 		assertThat(xml.uuid).isEqualTo(SCENARIO_UUID);
 		assertThat(xml.name).isEqualTo("scenario");
@@ -42,9 +38,7 @@ public class AttackScenarioXmlLoaderTest {
 		assertThat(xml.goalsRequired).isEqualTo("ANY");
 		assertThat(xml.timeBound).isCloseTo(100.0, within(EPSILON));
 		assertThat(xml.graph.ref).isEqualTo(GRAPH_UUID);
-		assertThatIterable(xml.targets)
-			.extracting(target -> target.ref)
-			.containsExactly(GOAL_G1_UUID);
+		assertThatIterable(xml.targets).extracting(target -> target.ref).containsExactly(GOAL_G1_UUID);
 		assertThat(xml.initialMarking).isEmpty();
 		assertThat(xml.failCondition.type).isEqualTo("anydetection");
 	}
@@ -52,7 +46,6 @@ public class AttackScenarioXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlIsFull() {
 		AttackScenarioXml xml = loader.load(resource("02-valid-full.xml"));
-
 		assertThat(xml).isNotNull();
 		assertThat(xml.uuid).isEqualTo(SCENARIO_UUID);
 		assertThat(xml.name).isEqualTo("full-scenario");
@@ -72,7 +65,6 @@ public class AttackScenarioXmlLoaderTest {
 	@Test
 	public void testLoadWhenXmlIsSyntacticallyValidWithUnknownTargetUuid() {
 		AttackScenarioXml xml = loader.load(resource("03-valid-semantically-wrong.xml"));
-
 		assertThat(xml).isNotNull();
 		assertThat(xml.uuid).isEqualTo(SCENARIO_UUID);
 		assertThat(xml.name).isEqualTo("scenario");

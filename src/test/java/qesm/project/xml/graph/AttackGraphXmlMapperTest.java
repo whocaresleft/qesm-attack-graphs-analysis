@@ -1,8 +1,6 @@
 package qesm.project.xml.graph;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatIterable;
+import static org.assertj.core.api.Assertions.*;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -47,7 +45,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenXmlIsMinimal() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("01-valid-minimal.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 10.0, NoneDistribution.get());
 		Step expectedStep = StepBuilder.create()
@@ -60,7 +57,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("minimal");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess, expectedGoal);
@@ -70,7 +66,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenXmlIsFull() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("02-valid-full.xml"));
-
 		Access expectedAccess1 = Access.create(ACCESS_A1_UUID, "A1", Exponential.fromRate(0.05));
 		Access expectedAccess2 = Access.create(ACCESS_A2_UUID, "A2", Exponential.fromRate(0.06));
 		Skill expectedSkill = Skill.create(SKILL_S1_UUID, "S1");
@@ -87,7 +82,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess1, expectedSkill, expectedKnowledge))
 			.withOutcomes(Set.of(expectedAccess2, expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("full");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(
@@ -99,7 +93,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenXmlContainsChainOfSteps() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("03-valid-chain.xml"));
-
 		Access expectedAccess1 = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Access expectedAccess2 = Access.create(ACCESS_A2_UUID, "A2", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 1.0, NoneDistribution.get());
@@ -123,7 +116,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess2))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("chain");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess1, expectedAccess2, expectedGoal);
@@ -133,7 +125,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenXmlContainsTwoPathsToGoal() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("04-valid-two-paths.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Skill expectedSkill = Skill.create(SKILL_S1_UUID, "S1");
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 5.0, NoneDistribution.get());
@@ -156,7 +147,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedSkill))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("two-paths");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess, expectedSkill, expectedGoal);
@@ -166,7 +156,6 @@ public class AttackGraphXmlMapperTest {
 	@Test
 	public void testToAttackGraphWhenStepHasCertainSuccess() {
 		AttackGraph graph = mapper.toAttackGraph(loadGraphXml("05-valid-certain-success.xml"));
-
 		Access expectedAccess = Access.create(ACCESS_A1_UUID, "A1", NoneDistribution.get());
 		Goal expectedGoal = Goal.create(GOAL_G1_UUID, "G1", 0.0, NoneDistribution.get());
 		Step expectedStep = StepBuilder.create()
@@ -177,7 +166,6 @@ public class AttackGraphXmlMapperTest {
 			.withRequirements(Set.of(expectedAccess))
 			.withOutcomes(Set.of(expectedGoal))
 			.build();
-
 		assertThat(graph.getUuid()).isEqualTo(GRAPH_UUID);
 		assertThat(graph.getName()).isEqualTo("certain-success");
 		assertThatIterable(graph.getVertices()).containsExactlyInAnyOrder(expectedAccess, expectedGoal);

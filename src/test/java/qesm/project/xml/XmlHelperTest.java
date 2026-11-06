@@ -1,7 +1,6 @@
 package qesm.project.xml;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 
 import java.nio.file.Path;
 import java.util.UUID;

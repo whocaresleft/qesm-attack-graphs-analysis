@@ -1,9 +1,6 @@
 package qesm.project.petrinet;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatIterable;
-import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -117,7 +114,6 @@ public class AttackScenarioPetriNetMapperTest {
 	public void testMapVerticesToPlacesAndInitialMarking() {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), AnyDetection.get());
 		Marking initialMarking = petriNet.getInitialMarking();
-
 		assertThatIterable(petriNet.getNet().getPlaceNames())
 			.contains("A1", "A2", "S1", "K1", "G1", "G2", "AttackerIdle");
 		assertThat(initialMarking.getTokens("AttackerIdle")).isEqualTo(1);
@@ -133,7 +129,6 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testMapCreatesDetectionSubnetOnlyForVerticesWithDetectionTime() {
 		PetriNet net = mapScenario(new Random(), AnyDetection.get()).getNet();
-
 		assertThatIterable(net.getTransitionNames())
 			.contains("A1_detection", "G1_detection")
 			.doesNotContain("A2_detection", "G2_detection");
@@ -146,7 +141,6 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testMapStepToCompleteSubnet() {
 		PetriNet net = mapScenario(new Random(), AnyDetection.get()).getNet();
-
 		assertThatIterable(net.getPlaceNames())
 			.contains("ST1_ongoing", "ST1_ended", "ST1_detected", "ST1_detectedAtFailure");
 		assertThatIterable(net.getTransitionNames())
@@ -161,7 +155,6 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testMapStepWhenDetectionIsNoneAndFailureProbabilitiesAreZero() {
 		PetriNet net = mapScenario(new Random(), AnyDetection.get()).getNet();
-
 		assertThatIterable(net.getTransitionNames())
 			.contains("ST2_start", "ST2_execution", "ST2_success")
 			.doesNotContain("ST2_detection", "ST2_failure", "ST2_failureDetected");
@@ -182,9 +175,7 @@ public class AttackScenarioPetriNetMapperTest {
 			.addVertex(goalG1)
 			.build();
 		AttackScenario scenario = createScenario(graphWithDuplicates, new Random(), NeverFail.get());
-
 		AttackScenarioPetriNet petriNet = mapper.map(scenario);
-
 		assertThatIterable(petriNet.getNet().getPlaceNames())
 			.hasSize(6)
 			.contains("S1", "S1_000000c2", "my_knowledge_1");
@@ -197,13 +188,10 @@ public class AttackScenarioPetriNetMapperTest {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), AnyDetection.get());
 		PetriNet net = petriNet.getNet();
 		Marking marking = petriNet.getInitialMarking();
-
 		assertThat(net.isEnabled(net.getTransition("ST1_start"), marking)).isTrue();
 		assertThat(net.isEnabled(net.getTransition("ST2_start"), marking)).isTrue();
-
 		marking.setTokens(petriNet.getAttackerIdle(), 0);
 		marking.setTokens(net.getPlace("ST1_ongoing"), 1);
-
 		assertThat(net.isEnabled(net.getTransition("ST1_start"), marking)).isFalse();
 		assertThat(net.isEnabled(net.getTransition("ST2_start"), marking)).isFalse();
 	}
@@ -213,10 +201,8 @@ public class AttackScenarioPetriNetMapperTest {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), AnyDetection.get());
 		PetriNet net = petriNet.getNet();
 		Marking marking = petriNet.getInitialMarking();
-
 		marking.setTokens(net.getPlace("G1"), 1);
 		assertThat(net.isEnabled(net.getTransition("ST1_start"), marking)).isTrue();
-
 		marking.setTokens(net.getPlace("A2"), 1);
 		assertThat(net.isEnabled(net.getTransition("ST1_start"), marking)).isFalse();
 	}
@@ -225,7 +211,6 @@ public class AttackScenarioPetriNetMapperTest {
 	public void testStepStartDoesNotConsumeRequirementPlaces() {
 		PetriNet net = mapScenario(new Random(), AnyDetection.get()).getNet();
 		Transition startTransition = net.getTransition("ST1_start");
-
 		assertThat(net.getPrecondition(net.getPlace("A1"), startTransition)).isNotNull();
 		assertThat(net.getPostcondition(startTransition, net.getPlace("A1"))).isNotNull();
 		assertThat(net.getPrecondition(net.getPlace("S1"), startTransition)).isNotNull();
@@ -237,7 +222,6 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testStopConditionWhenFailConditionIsAnyDetection() {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), AnyDetection.get());
-
 		assertThat(petriNet.getGoalCondition()).isEqualTo("G1>0");
 		assertThat(petriNet.getFailCondition()).hasValueSatisfying(condition ->
 			assertThat(condition).contains("A1_detected>0", "G1_detected>0", "ST1_detected>0", "ST1_detectedAtFailure>0"));
@@ -247,7 +231,6 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testStopConditionWhenFailConditionIsNeverFail() {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), NeverFail.get());
-
 		assertThat(petriNet.getFailCondition()).isEmpty();
 		assertThat(petriNet.getStopCondition()).isEqualTo("G1>0");
 	}
@@ -255,9 +238,7 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testOutcomesNeverExceedOneTokenDuringTransientAnalysis() {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), NeverFail.get());
-
 		Pair<Map<Marking, Integer>, double[][]> result = runTransientAnalysis(petriNet, MarkingCondition.NONE);
-
 		assertThat(result.first().keySet()).allSatisfy(marking -> {
 			assertThat(marking.getTokens("A2")).isLessThanOrEqualTo(1);
 			assertThat(marking.getTokens("G1")).isLessThanOrEqualTo(1);
@@ -269,12 +250,9 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testTransientAnalysisWithStopConditionComputesGoalAndDetectionProbabilities() {
 		AttackScenarioPetriNet petriNet = mapScenario(new Random(), AnyDetection.get());
-
 		Pair<Map<Marking, Integer>, double[][]> result = runTransientAnalysis(petriNet, petriNet.getStopMarkingCondition());
-
 		double goalProbability = probabilityAtEnd(result, MarkingCondition.fromString(petriNet.getGoalCondition()));
 		double failProbability = probabilityAtEnd(result, MarkingCondition.fromString(petriNet.getFailCondition().orElseThrow()));
-
 		assertThat(goalProbability).isGreaterThan(0.0);
 		assertThat(failProbability).isGreaterThan(0.0);
 		assertThat(goalProbability + failProbability).isLessThanOrEqualTo(1.0 + EPSILON);
@@ -283,28 +261,24 @@ public class AttackScenarioPetriNetMapperTest {
 	@Test
 	public void testMapWhenStrategyIsRandomAssignsEqualWeights() {
 		PetriNet net = mapScenario(new Random(), NeverFail.get()).getNet();
-
 		assertThat(immediateWeight(net, "ST1_start")).isEqualTo(immediateWeight(net, "ST2_start"));
 	}
 
 	@Test
 	public void testMapWhenStrategyIsGreedyAssignsHigherWeightToHigherValueGoal() {
 		PetriNet net = mapScenario(new Greedy(), NeverFail.get()).getNet();
-
 		assertThat(immediateWeight(net, "ST1_start")).isGreaterThan(immediateWeight(net, "ST2_start"));
 	}
 
 	@Test
 	public void testMapWhenStrategyIsCautiousAssignsHigherWeightToSaferStep() {
 		PetriNet net = mapScenario(new Cautious(), NeverFail.get()).getNet();
-
 		assertThat(immediateWeight(net, "ST2_start")).isGreaterThan(immediateWeight(net, "ST1_start"));
 	}
 
 	@Test
 	public void testMapWhenStrategyIsLowHangingFruitAssignsHigherWeightToFasterAndMoreLikelyStep() {
 		PetriNet net = mapScenario(new LowHangingFruit(), NeverFail.get()).getNet();
-
 		assertThat(immediateWeight(net, "ST2_start")).isGreaterThan(immediateWeight(net, "ST1_start"));
 	}
 
@@ -316,9 +290,7 @@ public class AttackScenarioPetriNetMapperTest {
 				return step.equals(stepSt2) ? 5 : 1;
 			}
 		};
-
 		PetriNet net = mapScenario(priorityStrategy, NeverFail.get()).getNet();
-
 		assertThat(featureOf(net.getTransition("ST2_start"), Priority.class).value()).isEqualTo(5);
 		assertThat(featureOf(net.getTransition("ST1_start"), Priority.class).value()).isEqualTo(1);
 	}
@@ -331,7 +303,6 @@ public class AttackScenarioPetriNetMapperTest {
 				return 0.0;
 			}
 		};
-
 		assertThatExceptionOfType(InvalidStrategyWeightException.class)
 			.isThrownBy(() -> mapScenario(invalidStrategy, NeverFail.get()));
 	}
@@ -356,7 +327,6 @@ public class AttackScenarioPetriNetMapperTest {
 			.addStep(stepWithNoDuration)
 			.build();
 		AttackScenario scenario = createScenario(graphWithUnsupportedStep, new Random(), NeverFail.get());
-
 		assertThatExceptionOfType(UnsupportedStepDurationException.class)
 			.isThrownBy(() -> mapper.map(scenario));
 	}
@@ -365,7 +335,6 @@ public class AttackScenarioPetriNetMapperTest {
 	public void testMapWhenFailConditionIsUnsupportedThrowsException() {
 		FailCondition unsupportedFailCondition = new FailCondition() {};
 		AttackScenario scenario = createScenario(graph, new Random(), unsupportedFailCondition);
-
 		assertThatExceptionOfType(UnsupportedFailConditionException.class)
 			.isThrownBy(() -> mapper.map(scenario));
 	}
