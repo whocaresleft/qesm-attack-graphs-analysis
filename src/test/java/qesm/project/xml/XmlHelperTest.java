@@ -3,53 +3,47 @@ package qesm.project.xml;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import qesm.project.xml.exception.InvalidUuidFormatException;
 import qesm.project.xml.exception.XmlLoadingException;
 import qesm.project.xml.graph.dto.AttackGraphXml;
 
-class XmlHelperTest {
+public class XmlHelperTest {
 
-	@XmlRootElement(name = "String")
-	public class DummyStringAttack {
-		@XmlElement String value;
-	}
-	
+	private static final String VALID_UUID = "00000000-0000-0000-0000-000000000000";
+	private static final String INVALID_UUID = "00000000000000000000000000000000";
+
 	@Test
-	void parseUuidWithInvalidRawUuidThrowsException() {
+	public void testParseUuidWhenUuidIsValid() {
+		UUID parsedUuid = XmlHelper.parseUuid(VALID_UUID);
+
+		assertThat(parsedUuid).isEqualTo(UUID.fromString(VALID_UUID));
+	}
+
+	@Test
+	public void testParseUuidWhenUuidHasLeadingAndTrailingSpaces() {
+		UUID parsedUuid = XmlHelper.parseUuid("  " + VALID_UUID + "  ");
+
+		assertThat(parsedUuid).isEqualTo(UUID.fromString(VALID_UUID));
+	}
+
+	@Test
+	public void testParseUuidWhenUuidIsInvalidThrowsException() {
 		assertThatExceptionOfType(InvalidUuidFormatException.class)
-			.isThrownBy(() -> XmlHelper.parseUuid("00000000000000000000000000000000"))
-			.withMessage("Invalid UUID: '00000000000000000000000000000000'");
+			.isThrownBy(() -> XmlHelper.parseUuid(INVALID_UUID))
+			.withMessage("Invalid UUID: '" + INVALID_UUID + "'");
 	}
-	
+
 	@Test
-	void parseUuidWithValidRawUuidIsOk() {
-		String validUuid = "00000000-0000-0000-0000-000000000000";
-		assertThat(XmlHelper.parseUuid(validUuid))
-			.isEqualTo(java.util.UUID.fromString(validUuid));
-	}
-	
-	@Test
-	void testUnmarshalWithInvalidXmlThrows() {
+	public void testUnmarshalWhenXmlIsInvalidThrowsException() {
+		Path invalidXmlPath = TestResourceHelper.resource("/xml/", "invalid-xml.xml");
+
 		assertThatExceptionOfType(XmlLoadingException.class)
-			.isThrownBy(() -> XmlHelper.unmarshal(resource("invalid-xml.xml"), AttackGraphXml.class))
+			.isThrownBy(() -> XmlHelper.unmarshal(invalidXmlPath, AttackGraphXml.class))
 			.withMessage("Error while loading: XML is not valid: invalid-xml.xml");
-	}
-	
-	private static Path resource(String name) {
-		try {
-			URL url = XmlHelperTest.class.getResource("/xml/" + name);
-			if (url == null) throw new IllegalArgumentException("Missing test resource: " + name);
-			return Path.of(url.toURI());
-		} catch (URISyntaxException e) {
-			throw new IllegalStateException(e);
-		}
 	}
 }
